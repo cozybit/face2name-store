@@ -1,0 +1,57 @@
+<h1>Event Configuration Download</h1>
+
+<p>
+  Thank you for using face2name at your Event. The Event Configuration file
+  needs to be transfered to your face2name server. Instructions:
+  <ul>
+    <li><strong>Download Event Configuration.</strong> Click on the download button below 
+      and save the file someplace on your computer, such as the Desktop.
+      <u>Remember</u> where you save the configuration file for the next step.
+      <p>
+        <a href="config-bundle-10-04-31-82616.tar.gz" class="button">Download</a>
+      </p>
+    </li>
+
+    <li><strong>Import Configuration to your Server.</strong>
+      In your web browser, go to the face2name import screen on your company's face2name server.
+      This will be somewhere like:
+      <blockquote>
+        http://___.___.___.___:9080/
+      </blockquote>
+      Click the <b>Choose File</b> button and choose the configuration file which
+      you downloaded in the previous step. Your remembered where you saved it, right?
+    </li>
+
+    <li><strong>Test your configuration.</strong> Go to your face2name
+    server's configuration page and ___.
+    </li>
+  </ul>
+</p>
+
+<!--
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Start date</th>
+    <th>End date</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @bundles.each do |bundle| %>
+  <tr>
+    <td><%= bundle.name %></td>
+    <td><%= bundle.start_date %></td>
+    <td><%= bundle.end_date %></td>
+    <td><%= link_to 'Show', bundle %></td>
+    <td><%= link_to 'Edit', edit_bundle_path(bundle) %></td>
+    <td><%= link_to 'Destroy', bundle, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Bundle', new_bundle_path %>
+-->

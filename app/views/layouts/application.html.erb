@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>face2name Store</title>
+  <% if not controller.instance_of?( Devise::SessionsController) and not controller.instance_of?( Devise::RegistrationsController) %>
+    <%= stylesheet_link_tag :all %>
+  <% end %>
+  <%= javascript_include_tag :defaults %>
+  <%= csrf_meta_tag %>
+</head>
+<body>
+  <div id="wrap">
+    <% if user_signed_in? %>
+      <div id="user_bar">
+        welcome <%= current_user.email%>
+        |
+        <%= link_to "sign out", destroy_user_session_path %>
+      </div>
+      <div id="nav_bar">
+        <%= link_to "store home", root_path %>
+      </div>
+    <% end %>
+    <div class="content">
+       <p class="notice"><%= notice %></p>
+       <p class="alert"><%= alert %></p>
+      <%= yield %>
+    </div>
+  </div>
+</body>
+</html>
