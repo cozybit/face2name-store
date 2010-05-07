@@ -1,11 +1,11 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  name: MyString
+  name: "Event One"
   start_date: 2010-05-05
   end_date: 2010-05-05
 
 two:
-  name: MyString
+  name: "Cruise Two"
   start_date: 2010-05-05
   end_date: 2010-05-05

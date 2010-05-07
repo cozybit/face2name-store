@@ -10,6 +10,10 @@ F2nstore::Application.routes.draw do |map|
   
   get "home/index"
 
+  match '/download' =>'home#download', :as => 'download'
+  
+  root :to => "home#index"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -62,7 +66,6 @@ F2nstore::Application.routes.draw do |map|
   # just remember to delete public/index.html.
   # root :to => "welcome#index"
   
-  root :to => "home#index"
   # See how all your routes lay out with "rake routes"
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
