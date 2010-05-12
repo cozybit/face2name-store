@@ -15,12 +15,16 @@
     <%= f.text_field :name %>
   </div>
   <div class="field">
-    <%= f.label :start_date %><br />
-    <%= f.date_select :start_date %>
+    <%= f.label :not_before %><br />
+    <%= f.date_select :not_before %>
   </div>
   <div class="field">
-    <%= f.label :end_date %><br />
-    <%= f.date_select :end_date %>
+    <%= f.label :not_after %><br />
+    <%= f.date_select :not_after %>
+  </div>
+  <div class="field">
+    <%= f.label :admin_password %><br />
+    <%= f.text_field :admin_password %>
   </div>
   <div class="actions">
     <%= f.submit %>

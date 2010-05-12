@@ -5,6 +5,11 @@ face2name Store - May 2010 - Carbon Five
 The f2n store is where face2name customers will buy licenses so
 that the f2n store will work for particular events.
 
+Specs for Configuration Bundle
+-----------------------------
+    https://123.writeboard.com/c81a2c60a098b49d8
+    (subversion)/face2name\docs\notes\config_bundle\config_bundle_spec.txt
+    (subversion)/face2name\keys\config_bundles\how_to.txt
 
 To install the face2name Store on your machine:
 -------------------------------------------------
@@ -43,32 +48,40 @@ Run Rails
     rails server
     (open browser to http://localhost:3000 )
 
+
 Publish app to Heroku 
 ---------------------
-Copied from: http://docs.heroku.com/git#using-subversion-or-other-revision-control-systems)
-    
-    First time only:
-        Install GIT on your machine
-            See http://git-scm.com/
-        
-        Create GIT repository on your machine, ignoring .svn files
-            cd {svn}/f2nstore_rails/f2nstore
-            git init
-            echo .svn >> .gitignore
-            git add .
-            git commit -m "using git for heroku deployment"
-            
-        Now tell Subversion to ignore Git:
-        
-            svn propset svn:ignore .git .
-            (Subversion replies: property 'svn:ignore' set on '.')
-            svn commit -m "ignoring git folder (git is used for heroku deployment)"
 
-    Each time you wish to deploy to Heroku:
-    
-        git add .
-        git commit -m "commit for deploy to heroku"
-        git push -f heroku
+Run the DEPLOY/deploy.py script.
+
+# OLD
+#Copied from: http://docs.heroku.com/git#using-subversion-or-other-revision-control-systems)
+#    
+#    First time only:
+#        Install GIT on your machine
+#            See http://git-scm.com/
+#        
+#        Create GIT repository on your machine, ignoring .svn files
+#            cd {svn}/f2nstore_rails
+#            git init
+#            echo .svn >> .gitignore
+#            git add .
+#            git commit -m "using git for heroku deployment"
+#            
+#        Now tell Subversion to ignore Git:
+#        
+#            svn propset svn:ignore .git .
+#            (Subversion replies: property 'svn:ignore' set on '.')
+#            svn commit -m "ignoring git folder (git is used for heroku deployment)"
+#
+#    Each time you wish to deploy to Heroku:
+#    
+#        git add .
+#        git commit -m "commit for deploy to heroku"
+#        git push -f heroku
+#        
+#    Visit store online:
+#        http://warm-beach-63.heroku.com
 
 
 Run f2n SERVER
@@ -79,7 +92,7 @@ machine.
     Get folders from Subversion, including src, test, and keys folders.
         svn co https://cozybit.svn.cvsdude.com/face2name
     
-    Make certificates
+    Make certificates -- For testing make your own. For production, use the keys in {svn}/keys.
         cd .../face2name/keys/ca
         openssl ???
     

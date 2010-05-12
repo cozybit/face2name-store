@@ -1,5 +1,3 @@
-<p class="notice"><%= notice %></p>
-
 <p>
   <b>Name:</b>
   <%= @event.name %>
@@ -7,14 +5,19 @@
 
 <p>
   <b>Start date:</b>
-  <%= @event.start_date %>
+  <%= @event.not_before %>
 </p>
 
 <p>
   <b>End date:</b>
-  <%= @event.end_date %>
+  <%= @event.not_after %>
 </p>
 
+<p>
+  <b>Administrator password:</b>
+  <%= @event.admin_password %>
+</p>
 
+<%= link_to 'Download Configuration', configuration_event_path(@event) %> |                        
 <%= link_to 'Edit', edit_event_path(@event) %> |
 <%= link_to 'Back', events_path %>

@@ -1,7 +1,9 @@
+require 'create_config_bundle'
+
 class EventsController < ApplicationController
   before_filter :authenticate_user!
-
   # GET /events
+
   # GET /events.xml
   def index
     @events = Event.all
@@ -81,5 +83,23 @@ class EventsController < ApplicationController
       format.html { redirect_to(events_url) }
       format.xml  { head :ok }
     end
+  end
+
+  # GET /event/1/configuration
+  def configuration
+    @event = Event.find( params[:id] )
+    attendees = [
+            # Name, email, photo_filename
+#            ["Arthur Capuano", "user_000@test.com", 'arthur_photo.jpg'],
+#            ["Jane Tester", "jane@doggiedoo.com", 'jane_photo.jpg'],
+#            ["Jill Tester", "jill@hill.com", nil],
+    ]    
+    config_bundle_fname, temp_dir = make_configuration_bundle( @event.name, attendees,
+       @event.admin_password, @event.not_before, @event.not_after )
+
+    short_fname = File.basename( config_bundle_fname )
+    send_file(config_bundle_fname, :filename => short_fname, :type => "application/octet-stream")
+    puts "config_bundle_fname=#{temp_dir}"
+#    cleanup( temp_dir )
   end
 end

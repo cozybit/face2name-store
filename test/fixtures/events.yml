@@ -2,10 +2,10 @@
 
 one:
   name: "Event One"
-  start_date: 2010-05-05
-  end_date: 2010-05-05
+  not_before: 2010-05-05
+  not_after: 2010-05-05
 
 two:
   name: "Cruise Two"
-  start_date: 2010-05-05
-  end_date: 2010-05-05
+  not_before: 2010-05-05
+  not_after: 2010-05-05
