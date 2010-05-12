@@ -269,7 +269,8 @@ end
 
 
 def make_temp_dir()
-  shared_temp_fldr = Dir.tmpdir
+#  shared_temp_fldr = Dir.tmpdir
+  shared_temp_fldr = File.join(rails_root_fldr, 'tmp' )
   valid_chars = ("A".."Z").to_a + ("a".."z").to_a + ("1".."9").to_a
 
   is_unique = false
