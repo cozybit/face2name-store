@@ -330,7 +330,7 @@ def tar_gz( event_name, output_dir, tarball_source )
   f.close()
   
   # compose command line to run
-  tar_gz_cmd = "/usr/bin/tar -czf \"#{tarball_filename}\" -C \"#{tarball_source}\" -T #{filenames_to_tar} 2>&1" # 2>&1 will capture stderr
+  tar_gz_cmd = "tar -czf \"#{tarball_filename}\" -C \"#{tarball_source}\" -T #{filenames_to_tar} 2>&1" # 2>&1 will capture stderr
   output = run_cmd( tar_gz_cmd, "Trying to tar-gzip file, but the command failed." )
 
   if ! File.exists? tarball_filename
