@@ -17,7 +17,8 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     ]
   
     event_name = 'My Great Conference-'+(rand(92-65)+65).chr  # add something to change the filename
-    config_bundle_filename, tempdir = make_configuration_bundle( event_name,
+    serial_num = rand(100)+1
+    config_bundle_filename, tempdir = make_configuration_bundle( serial_num, event_name,
       attendees,
       'simple',
       Time.utc(2010, 5, 10),
@@ -33,7 +34,8 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     start_time = Time.utc(2010, rand(12)+1, rand(28)+1 )
     event_name = 'Test Certificate Data'
     expect_end_time = start_time + (rand(21)+1) * 60*60*24
-    cert_name = openssl_certificates( temp_dir, temp_dir, event_name,
+    expect_serial_num = rand(100)+1
+    cert_name = openssl_certificates( temp_dir, temp_dir, expect_serial_num, event_name,
        start_time, expect_end_time )
 
     # Check end-date
@@ -49,6 +51,7 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     assert_equal( expect_end_time.year, c.not_after.year )
     assert_equal( expect_end_time.month, c.not_after.month )
     assert_equal( expect_end_time.day, c.not_after.day )
+    assert_equal( expect_serial_num, c.serial )
     assert_match( /^\/CN=#{event_name}\/.+/, c.subject.to_s )
   end
 
@@ -59,7 +62,8 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
             ["Jane Tester", "jane@doggiedoo.com", 'jane_photo.jpg'],
             ["Jill Tester", "jill@hill.com", nil],
           ]
-    config_bundle_filename, temp_dir = make_configuration_bundle( "my event",
+    serial_num = rand(100)+1
+    config_bundle_filename, temp_dir = make_configuration_bundle( serial_num, "my event",
       attendees,
       'simple',
       Time.utc(2010, 5, 10),
@@ -68,7 +72,8 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
   end
 
   test "no users means no users.xml" do
-    config_bundle_filename, temp_dir = make_configuration_bundle( "my event",
+    serial_num = rand(100)+1
+    config_bundle_filename, temp_dir = make_configuration_bundle( serial_num, "my event",
       [],
       'simple',
       Time.utc(2010, 5, 10),

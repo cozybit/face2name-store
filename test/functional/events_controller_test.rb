@@ -35,18 +35,19 @@ class EventsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should create event" do
-    assert_difference('Event.count',difference=0) do
-      post :create, :event => @event.attributes
+  test "create event should fail without sign in" do
+    assert_no_difference('Event.count') do
+      post :create, :event => { :name=>'test event', :admin_password=>'simple'}
     end
 
     # should fail without authentication
     assert_response 302
-    
+  end
+  test "create event after sign in" do
     # once signed in, should be available
     self.testuser_signin
     assert_difference('Event.count') do
-      post :create, :event => @event.attributes
+      post :create, :event => { :name=>'test event', :admin_password=>'simple'}
     end
 
     assert_redirected_to event_path(assigns(:event))
@@ -75,13 +76,13 @@ class EventsControllerTest < ActionController::TestCase
   end
 
   test "should update event" do
-    put :update, :id => @event.to_param, :event => @event.attributes
+    put :update, :id => @event.to_param, :event => { :name=>'test event', :admin_password=>'simple'}
     # should fail without authentication
     assert_response 302
 
     # once signed in, should be available
     self.testuser_signin
-    put :update, :id => @event.to_param, :event => @event.attributes
+    put :update, :id => @event.to_param, :event => { :name=>'test event', :admin_password=>'simple'}
     assert_redirected_to event_path(assigns(:event))
   end
 

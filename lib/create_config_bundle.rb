@@ -271,7 +271,7 @@ end
 def make_temp_dir()
 #  shared_temp_fldr = Dir.tmpdir
   shared_temp_fldr = File.join(rails_root_fldr, 'tmp' )
-  valid_chars = ("A".."Z").to_a + ("a".."z").to_a + ("1".."9").to_a
+valid_chars = ("A".."Z").to_a + ("a".."z").to_a + ("1".."9").to_a
 
   is_unique = false
   until is_unique
@@ -344,7 +344,7 @@ end
 # Make server key and CSR
 # see: {svn}/face2name/tests/openfire/extract.sh
 #
-def openssl_certificates( temp_dir, keys_dir, event_name, not_before, not_after )
+def openssl_certificates( temp_dir, keys_dir, cert_serial_num, event_name, not_before, not_after )
 #  raise "not_before should be a Time object but is #{not_before.class.name}."\
 #    unless not_before.respond_to? Time
 #  raise "not_after should be a Time object but is #{not_after.class.name}." \
@@ -406,8 +406,9 @@ def openssl_certificates( temp_dir, keys_dir, event_name, not_before, not_after 
   f2n_serial = File.join( lib_fldr, 'f2n.serial' )
   cmd = "openssl x509 -req -extfile \"#{openssl_config}\" -extensions \"usr_cert\" "+
       "-in \"#{f2n_server_csr}\" -CA \"#{ssl_ca_cert}\" -CAkey \"#{ssl_ca_key}\" "+
-      "-out \"#{ssl_server_cert}\" -days #{days} -CAcreateserial -CAserial "+
-      "\"#{f2n_serial}\" 2>&1"
+      "-out \"#{ssl_server_cert}\" -days #{days} -CAcreateserial "+
+      "-set_serial #{cert_serial_num} 2>&1"
+#      "-CAserial \"#{f2n_serial}\" 2>&1"
   run_cmd( cmd, "Certificate signing failed")
 #         openssl x509 -req -extfile "${conf}" -extensions "usr_cert" -in "${path}/f2n_server.csr" -CA "${SSL_CA_CERT}" -CAkey "${SSL_CA_KEY}" -out "${SSL_SERVER_CERT}" -days 365 -CAcreateserial -CAserial "${path}/f2n.serial" >/dev/null 2>&1
 #         check_error "Certificate signing failed"
@@ -448,7 +449,7 @@ def f2n_cipher( tempdir, tgz_filename )
 end
 
 
-def make_configuration_bundle( event_name, attendees, admin_pass, not_before, not_after )
+def make_configuration_bundle( cert_serial_num, event_name, attendees, admin_pass, not_before, not_after )
 
   # build directory structure on disk
   tempdir = make_temp_dir()
@@ -460,7 +461,7 @@ def make_configuration_bundle( event_name, attendees, admin_pass, not_before, no
   # TODO [ww may 2010]
 
   openssl_certificates( tempdir, File.join( tarball_source, 'keys' ),
-    event_name, not_before, not_after )
+    cert_serial_num, event_name, not_before, not_after )
 
   # Make XML file
   if attendees!=nil and attendees.length > 0

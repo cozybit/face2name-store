@@ -94,7 +94,8 @@ class EventsController < ApplicationController
 #            ["Jane Tester", "jane@doggiedoo.com", 'jane_photo.jpg'],
 #            ["Jill Tester", "jill@hill.com", nil],
     ]    
-    config_bundle_fname, temp_dir = make_configuration_bundle( @event.name, attendees,
+    config_bundle_fname, temp_dir = make_configuration_bundle( @event.id,
+       @event.name, attendees,
        @event.admin_password, @event.not_before, @event.not_after )
 
     short_fname = File.basename( config_bundle_fname )
