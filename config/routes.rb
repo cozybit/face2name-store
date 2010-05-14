@@ -5,7 +5,6 @@ F2nstore::Application.routes.draw do |map|
 
   resource :home
 
-  resources :bundles
   resources :events do
     member do
       get :configuration

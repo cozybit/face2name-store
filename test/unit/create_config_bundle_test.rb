@@ -3,6 +3,8 @@
 require 'test_helper'
 require 'create_config_bundle'
 require 'openssl'
+require 'base64'
+require 'digest/sha2'
 
 class CreateConfigBundleTest < ActiveSupport::TestCase
 
@@ -19,7 +21,6 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     event_name = 'My Great Conference-'+(rand(92-65)+65).chr  # add something to change the filename
     serial_num = rand(100)+1
     config_bundle_filename, tempdir = make_configuration_bundle( serial_num, event_name,
-      attendees,
       'simple',
       Time.utc(2010, 5, 10),
       Time.utc(2010, 5, 15) )
@@ -55,30 +56,57 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     assert_match( /^\/CN=#{event_name}\/.+/, c.subject.to_s )
   end
 
-  test "users.xml exists" do
-    attendees = [
-            # Name, email, photo_filename
-            ["Arthur Capuano", "user_000@test.com", 'arthur_photo.jpg'],
-            ["Jane Tester", "jane@doggiedoo.com", 'jane_photo.jpg'],
-            ["Jill Tester", "jill@hill.com", nil],
-          ]
-    serial_num = rand(100)+1
-    config_bundle_filename, temp_dir = make_configuration_bundle( serial_num, "my event",
-      attendees,
-      'simple',
-      Time.utc(2010, 5, 10),
-      Time.utc(2010, 5, 15) )
-    assert File.exists?(File.join( temp_dir, 'to_tar_gz','users.xml' ))
+  test "encrypt file with AES" do
+    plaintext = 'This is the plaintext'
+    encrypted = aes(plaintext, Digest::SHA256.digest('foo'))
+
+    d = OpenSSL::Cipher::Cipher.new('aes-256-ecb').decrypt
+    d.key = Digest::SHA256.digest('foo')
+    decrypted = d.update(encrypted) << d.final
+    
+    assert decrypted == plaintext
   end
 
-  test "no users means no users.xml" do
-    serial_num = rand(100)+1
-    config_bundle_filename, temp_dir = make_configuration_bundle( serial_num, "my event",
-      [],
-      'simple',
-      Time.utc(2010, 5, 10),
-      Time.utc(2010, 5, 15) )
-    assert !File.exists?(File.join( temp_dir, 'to_tar_gz','users.xml' ))
+  test "PK encryption is reversible" do
+    plaintext = 'This is the plaintext'
+
+    public_key = File.read(File.join(rails_root_fldr, 'lib', 'keys', 'f2n_config_bundle_pub.key'))
+    encrypted = pk_encrypt(plaintext, public_key)
+
+    private_key = File.read(File.join(rails_root_fldr, 'lib', 'keys', 'key.pem'))
+
+    private = OpenSSL::PKey::RSA.new(private_key)
+    unencrypted = private.private_decrypt(encrypted)
+
+    assert plaintext == unencrypted
+  end
+
+  test 'crypt file with PK encrypted AES key' do
+    plaintext = 'This is the plaintext'
+    encrypted = crypt(plaintext)
+
+    f = File.open('test.crypted', 'w')
+    f.write(encrypted)
+    f.close()
+
+    working = File.expand_path(File.dirname(f.path))
+
+    crypted_file = File.expand_path(f.path)
+    output_file = File.join(working, 'test.plaintext')
+
+    cipher_tool_path = File.expand_path(File.join(rails_root_fldr, 'f2n_scripts', 'f2n-cipher-1.0.0'))
+    jar = File.join(cipher_tool_path, "f2n-cipher-1.0.0.jar")
+    privk = File.join(cipher_tool_path, 'keys', 'f2n_config_bundle.key' )
+
+    cmd = "cd #{cipher_tool_path}; java -jar #{jar} -d #{crypted_file} -R #{output_file} -P #{privk}"
+    run_cmd( cmd, "Trying to decrypt the test file." )
+
+    unencrypted = File.open(output_file).read
+
+    File.delete(crypted_file)
+    File.delete(output_file)
+
+    assert plaintext == unencrypted, 'Unencrypted data does not match plaintext'
   end
 
 end

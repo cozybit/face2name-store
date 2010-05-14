@@ -100,7 +100,7 @@ machine.
         cd .../face2name/tests/openfire
         ./extract.sh --ssl-ca-cert ../../keys/ca/f2n_ca.crt --ssl-ca-key ../../keys/ca/f2n_ca.key.unsecure --admin-pw admin
         for winston:
-            ./extract.sh --ssl-ca-cert ../../ww_keys/ca/f2n_ca.crt --ssl-ca-key ../../ww_keys/ca/f2n_ca.key.unsecure --admin-pw admin
+        ./extract.sh --ssl-ca-cert ../../ww_keys/ca/f2n_ca.crt --ssl-ca-key ../../ww_keys/ca/f2n_ca.key.unsecure --admin-pw admin
 
     Manually copy Config Import keys
         cd {svn}/face2name/keys/config_bundles

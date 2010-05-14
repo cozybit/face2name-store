@@ -88,14 +88,8 @@ class EventsController < ApplicationController
   # GET /event/1/configuration
   def configuration
     @event = Event.find( params[:id] )
-    attendees = [
-            # Name, email, photo_filename
-#            ["Arthur Capuano", "user_000@test.com", 'arthur_photo.jpg'],
-#            ["Jane Tester", "jane@doggiedoo.com", 'jane_photo.jpg'],
-#            ["Jill Tester", "jill@hill.com", nil],
-    ]    
     config_bundle_fname, temp_dir = make_configuration_bundle( @event.id,
-       @event.name, attendees,
+       @event.name,
        @event.admin_password, @event.not_before, @event.not_after )
 
     short_fname = File.basename( config_bundle_fname )
