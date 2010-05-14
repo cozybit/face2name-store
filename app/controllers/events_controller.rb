@@ -94,7 +94,7 @@ class EventsController < ApplicationController
 
     short_fname = File.basename( config_bundle_fname )
     send_file(config_bundle_fname, :filename => short_fname, :type => "application/octet-stream",
-              :stream => false, x_sendfile=>false)
+              :stream => false, :x_sendfile=>false)
 
     puts "??? config_bundle_fname=#{config_bundle_fname}"
     puts "??? size of this file is: #{File.size(config_bundle_fname)}"
