@@ -93,12 +93,9 @@ class EventsController < ApplicationController
        @event.admin_password, @event.not_before, @event.not_after )
 
     short_fname = File.basename( config_bundle_fname )
-    
-    send_data(File.open(config_bundle_fname,'r').read(), :filename => short_fname, 
+    send_data(File.open(config_bundle_fname, 'r').read(), :filename => short_fname,
               :type => "application/octet-stream")
-
-    puts "??? config_bundle_fname=#{config_bundle_fname}"
-    puts "??? size of this file is: #{File.size(config_bundle_fname)}"
+    puts "config_bundle_fname=#{temp_dir}"
 #    cleanup( temp_dir )
   end
 end
