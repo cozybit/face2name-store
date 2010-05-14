@@ -93,7 +93,7 @@ class EventsController < ApplicationController
        @event.admin_password, @event.not_before, @event.not_after )
 
     short_fname = File.basename( config_bundle_fname )
-    send_file(config_bundle_fname, :filename => short_fname, :type => "application/octet-stream")
+    send_file(config_bundle_fname, :filename => short_fname, :type => "application/octet-stream", :stream => false)
     puts "config_bundle_fname=#{temp_dir}"
 #    cleanup( temp_dir )
   end
