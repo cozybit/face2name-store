@@ -95,6 +95,6 @@ class EventsController < ApplicationController
     short_fname = File.basename( config_bundle_fname )
     send_file(config_bundle_fname, :filename => short_fname, :type => "application/octet-stream")
     puts "config_bundle_fname=#{temp_dir}"
-#    cleanup( temp_dir )
+    cleanup( temp_dir )
   end
 end

@@ -114,4 +114,19 @@ machine.
         ./openfire.sh
         (open browser to http://localhost:9080 )
     
-    
+Test Users
+------------
+    <Username>fb12785b3f4400515b14b68235a0abd57ba87d24</Username>
+    <Password>LVHOPD</Password>
+    <Email>user_000@test.com</Email>
+    <Name>Arthur Capuano</Name>
+
+    <Username>8f87b6285f3d6fb1f55ae7e393fed62f59dec4d6</Username>
+    <Password>LVAPIQ</Password>
+    <Email>jane@doggiedoo.com</Email>
+    <Name>Jane Tester</Name>
+
+    <Username>c4d43abab7f1f938f3bfa18bbcb463e8159235f0</Username>
+    <Password>KBHKET</Password>
+    <Email>jill@hill.com</Email>
+    <Name>Jill Tester</Name>
