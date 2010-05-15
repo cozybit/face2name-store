@@ -4,6 +4,7 @@ class CreateEvents < ActiveRecord::Migration
       t.string :name
       t.date :not_before
       t.date :not_after
+      t.string :admin_password
 
       t.timestamps
     end

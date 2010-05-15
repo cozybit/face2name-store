@@ -10,7 +10,12 @@ F2nstore::Application.routes.draw do |map|
       get :configuration
     end
   end
-  
+
+  namespace :admin do
+    resources :users
+  end
+
+
   get "home/index"
 
   match '/download' =>'home#download', :as => 'download'

@@ -1,16 +1,26 @@
-<h1>face2name STORE</h1>
+<h2>Face2Name Store</h2>
 
-<p>Welcome to the face2name STORE. This is where you purchase new event
-configurations.
+<p>Welcome to the face2name STORE. This is where you download the latest
+  version of face2name Server, and purchase new event
+  configurations.
 </p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+<p>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Suspendisse eu pulvinar mi. Sed porttitor sollicitudin lacus, in ornare
 risus imperdiet sed. In a purus nulla, ut placerat diam. Nunc ultricies,
 urna sed volutpat viverra, elit nibh lobortis massa, at tincidunt purus
 sapien auctor nisl. Nunc laoreet fermentum nisl, in fringilla lacus
-lacinia eu. 
+lacinia eu.
 </p>
+<p>&nbsp;</p>
+<h3>Downloads</h3>
 <p>
+<%= link_to "Click Here to download f2n server.", download_path, :class => "button" %>
+</p>
+<p>&nbsp;</p>
+<h3>Event Configurations</h3>
+<p>
+<a href="<%=events_path%>" class="button"><span>View Current Events</span></a>
 <%= link_to "Make New Event", new_event_path, :class => "button" %>
 </p>
 

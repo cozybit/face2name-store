@@ -3,7 +3,6 @@ require 'create_config_bundle'
 class EventsController < ApplicationController
   before_filter :authenticate_user!
   # GET /events
-
   # GET /events.xml
   def index
     @events = Event.all

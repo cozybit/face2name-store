@@ -18,36 +18,162 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 	font-style: normal;
 }
 
-body {
-    background-color: black;
-}
 .page {
   width: 940px;
   margin: 20px auto;
 }
+
 .header {
   height: 44px;
   overflow: hidden;
-  text-indent: -2000px;
   background: url(/images/header.png) no-repeat;
   margin: 0 0 3px 0;
+  color: white;
 }
+
+.header a {
+  color: #CCC;
+  text-decoration: none;
+}
+
+.header a:hover {
+  color: #DDD;
+  text-decoration: underline;
+}
+
 .header span {
+  margin-top: 13px;
   float: right;
+}
+
+.header span.notice,
+.header span.alert {
+  float: left;
+  margin-left: 235px;
+  width: 400px;
+}
+
+.notice {
+  color: #BEB;
+  text-align: center;
+}
+
+.header span.right_border {
+  margin-top: 0px;
   width: 20px;
   max-width: 960px;
   height: 44px;
   background: red url(/images/header.png) no-repeat 0 -44px;
 }
+
 .body {
-  background: #f2f2f2 url(/images/body.png) no-repeat left bottom;
   border: 1px solid #cac7c7;
   padding: 20px;
-  min-height: 200px;
+  min-height: 400px;
   max-width: 960px;
+
+  color: #444444;
+  background-color: #FBFBFB;
+
+
   border-radius: 0 0 20px 20px;
   -moz-border-radius-bottomleft: 20px;
   -moz-border-radius-bottomright: 20px;
   -webkit-border-bottom-left-radius: 20px;
   -webkit-border-bottom-right-radius: 20px;
+}
+
+body, p, ol, ul, td {
+  font:13.34px helvetica,arial,freesans,clean,sans-serif;
+  line-height: 1.4em;
+}
+
+h1, h2 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: #000000;
+}
+
+h2 {
+  font-size: 1.3em;
+}
+h3 {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+p {
+  margin-top: 1em;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+
+.button  {
+  background:url("/images/button_matrix.png") no-repeat scroll 0 0 transparent;
+  border:medium none;
+  color:#000000;
+  cursor:pointer;
+  display:inline-block;
+  font-size:11px;
+  font-weight:bold;
+  height:23px;
+  overflow:visible;
+  padding:0 0 0 3px;
+  text-shadow:1px 1px 0 #FFFFFF;
+  white-space:nowrap;
+}
+
+.button > span {
+  background:url("/images/button_matrix.png") no-repeat scroll 100% 0 transparent;
+  display:block;
+  height:23px;
+  line-height:23px;
+  padding:0 10px 0 8px;
+}
+
+div.field, div.actions {
+  margin-bottom: 5px;
+}
+
+div.field label {
+  font-size: 12px;
+}
+
+.alert {
+  color: red;
+}
+
+.fieldWithErrors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+#errorExplanation {
+  width: 450px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 0;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  margin-bottom: 0px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
 }

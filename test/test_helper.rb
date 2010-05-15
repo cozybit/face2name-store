@@ -12,5 +12,10 @@ class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   
   # Add more helper methods to be used by all tests here...
+  def signin_as_testuser
+    @user = users(:testuser) # from test fixtrure
+    @controller.sign_in @user
+    assert @controller.user_signed_in?
+  end
 
 end

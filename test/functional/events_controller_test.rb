@@ -2,35 +2,32 @@ require 'test_helper'
 
 class EventsControllerTest < ActionController::TestCase
   include Devise::TestHelpers
-  
+
   setup do
     @event = events(:one)
   end
 
-  def testuser_signin
-    @user = users(:testuser) # from test fixtrure
-    sign_in @user
-    assert @controller.user_signed_in?
-  end
-  
   test "should get index" do
     # should fail without authentication
     get :index
     assert_response 302
     
-    self.testuser_signin
+    self.signin_as_testuser
     get :index
     assert_response :success
     assert_not_nil assigns(:events)
   end
 
-  test "should get new" do
+  test "new event should be blocked without signin" do
     # should fail without authentication
     get :new
     assert_response 302
-    
+  end
+  
+  test "should allow new event after signin" do
+
     # once signed in, should be available
-    self.testuser_signin
+    self.signin_as_testuser
     get :new
     assert_response :success
   end
@@ -45,7 +42,7 @@ class EventsControllerTest < ActionController::TestCase
   end
   test "create event after sign in" do
     # once signed in, should be available
-    self.testuser_signin
+    self.signin_as_testuser
     assert_difference('Event.count') do
       post :create, :event => { :name=>'test event', :admin_password=>'simple'}
     end
@@ -59,7 +56,7 @@ class EventsControllerTest < ActionController::TestCase
     assert_response 302
 
     # once signed in, should be available
-    self.testuser_signin
+    self.signin_as_testuser
     get :show, :id => @event.to_param
     assert_response :success
   end
@@ -70,7 +67,7 @@ class EventsControllerTest < ActionController::TestCase
     assert_response 302
 
     # once signed in, should be available
-    self.testuser_signin
+    self.signin_as_testuser
     get :edit, :id => @event.to_param
     assert_response :success
   end
@@ -81,7 +78,7 @@ class EventsControllerTest < ActionController::TestCase
     assert_response 302
 
     # once signed in, should be available
-    self.testuser_signin
+    self.signin_as_testuser
     put :update, :id => @event.to_param, :event => { :name=>'test event', :admin_password=>'simple'}
     assert_redirected_to event_path(assigns(:event))
   end
@@ -95,7 +92,7 @@ class EventsControllerTest < ActionController::TestCase
     assert_response 302
 
     # once signed in, should be available
-    self.testuser_signin
+    self.signin_as_testuser
     assert_difference('Event.count', difference=-1) do
       delete :destroy, :id => @event.to_param
     end

@@ -307,7 +307,7 @@ def make_configuration_bundle( cert_serial_num, event_name, admin_pass, not_befo
     cert_serial_num, event_name, not_before, not_after )
 
   # Make admin password File
-  f = File.new( File.join(  tarball_source, 'admin_password.txt'), 'wb' )
+  f = File.new( File.join( tarball_source, 'admin_password.txt' ), 'wb' )
   f.write( admin_pass )
   f.close()
 
