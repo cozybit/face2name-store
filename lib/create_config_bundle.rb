@@ -288,6 +288,7 @@ def make_configuration_bundle( cert_serial_num, event_name, admin_pass, not_befo
   tarball_source = File.join( tempdir, 'to_tar_gz' )
   FileUtils.mkdir_p( tarball_source )
   raise "Assert: Unable to make temporary folder at '"+tarball_source+"'" unless File.directory? tarball_source
+  
 
   openssl_certificates( tempdir, File.join( tarball_source, 'keys' ),
     cert_serial_num, event_name, not_before, not_after )
@@ -295,6 +296,20 @@ def make_configuration_bundle( cert_serial_num, event_name, admin_pass, not_befo
   # Make admin password File
   f = File.new( File.join( tarball_source, 'admin_password.txt' ), 'wb' )
   f.write( admin_pass )
+  f.close()
+
+#???? TESTING
+File.open( File.join(tarball_source, 'users.xml'), 'w') do |f|
+  test_users = [
+      ['Winston Wolff', 'winston@carbonfive.com', nil] ,
+      ['Gonzalo Arreche', 'garreche@gmail.com', nil]
+  ]
+  f.write(make_users_xml(test_users ))
+end
+
+  # !!! Make server passphrase file (Yikes, is this right?)
+  f = File.new( File.join( tarball_source, 'keys', 'f2n_server.pass' ), 'wb' )
+  f.write( "I never forget a face" )
   f.close()
 
   # tar/gzip it.

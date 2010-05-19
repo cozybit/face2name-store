@@ -9,6 +9,9 @@ gem 'devise', '1.1.rc1'
 gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'haml'
 gem 'mechanize'
+gem 'money'
+gem 'mocha'
+gem 'google4r-checkout'
 
 # Use unicorn as the web server
 # gem 'unicorn'

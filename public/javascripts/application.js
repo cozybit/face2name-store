@@ -9,7 +9,6 @@ $(document).ready(function() {
     $flasher.css('background-color', '#FFFFC7');
 
     setTimeout(function() {
-      console.log('animate');
       $flasher.animate({ backgroundColor: start_color }, 1000);
     }, 500);
   };
