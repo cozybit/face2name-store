@@ -44,3 +44,12 @@ F2nstore::Application.configure do
   config.action_mailer.perform_deliveries = false
   config.action_mailer.raise_delivery_errors = true
 end
+
+F2N.merge!({
+  # Google Checkout merchant information
+  :google_merchant_info => {
+    :merchant_id => '505737408619416',
+    :merchant_key => 'yyWPO3KjnNRI7JoL4pRZxw',
+    :use_sandbox => false
+  }
+})

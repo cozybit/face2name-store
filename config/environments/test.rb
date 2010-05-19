@@ -46,5 +46,5 @@ F2N.merge!({
 
   # Configure path to keys for rudimentary PK encryption testing
   :test_public_key => Rails.root.join('test', 'resources', 'crypto', 'public.pem'),
-  :test_private_key => Rails.root.join('test', 'resources', 'crypto', 'private.pem')
+  :test_private_key => Rails.root.join('test', 'resources', 'crypto', 'private.pem'),
 })

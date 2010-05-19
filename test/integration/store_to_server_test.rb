@@ -20,7 +20,7 @@ class StoreToServerTest < Test::Unit::TestCase
       browser.get(SERVER_THINCLIENT_URL)
       return true
     rescue StandardError=>exc
-      puts "exception=#{exc}"
+      #puts "exception=#{exc}"
       return false
     end
   end
@@ -31,7 +31,7 @@ class StoreToServerTest < Test::Unit::TestCase
       browser.get(STORE_URL)
       return true
     rescue StandardError=>exc
-      puts "exception=#{exc}"
+      #puts "exception=#{exc}"
       return false
     end
   end
@@ -46,7 +46,7 @@ class StoreToServerTest < Test::Unit::TestCase
 
   def test_buy_and_import_configuration()
     if ! f2n_server_is_running() || ! f2n_store_is_running()
-      puts "skipping"
+      puts "test_buy_and_import_configuration: No f2n server found. Skipping test."
       return
     end
 

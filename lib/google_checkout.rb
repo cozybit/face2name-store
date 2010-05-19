@@ -1,9 +1,10 @@
 require 'rubygems'
 require "google4r/checkout"
+require "time"
 
-def purchase_event(event_id)
+def initiate_event_purchase(event, confirmation_url)
   # Use your own merchant ID and Key, set use_sandbox to false for production
-  configuration = { :merchant_id => '1234567890987654', :merchant_key => 'abc_efghijklmn_opq', :use_sandbox => true }
+  configuration = F2N[:google_merchant_info]
 
   @frontend = Google4R::Checkout::Frontend.new(configuration)
   @frontend.tax_table_factory = TaxTableFactory.new
@@ -12,24 +13,29 @@ def purchase_event(event_id)
 
   # Adding an item to shopping cart
   checkout_command.shopping_cart.create_item do |item|
-    item.name = "Face2Name Event"
-    item.description = "A pack of highly nutritious..."
-    item.unit_price = Money.new(1000, "USD") # $35.00
+    item.name = "Face2Name Event: #{event.name}"
+    item.description = "From #{event.not_before.strftime('%b %d %Y')} to #{event.not_after.strftime('%b %d %Y')}"
+    item.unit_price = Money.us_dollar(1000)
     item.quantity = 1
+
+    item.create_digital_content do |digital_content|
+      digital_content.display_disposition = 'OPTIMISTIC'
+      digital_content.description = 'Click on this URL to download your event configuration.'
+      digital_content.url = confirmation_url
+    end
   end
 
-  # Create a flat rate shipping method
-#  checkout_command.create_shipping_method(Google4R::Checkout::FlatRateShipping) do |shipping_method|
-#    shipping_method.name = ""
-#    shipping_method.price = Money.new(500, "USD")
-#    # Restrict to ship only to California
-#    shipping_method.create_allowed_area(Google4R::Checkout::UsStateArea) do |area|
-#      area.state = "CA"
-#    end
-#  end
+  checkout_command.send_to_google_checkout
+end
 
-  response = checkout_command.send_to_google_checkout
-  puts response.redirect_url
+def check_event_purchase_status(most_recent_notification_time)
+  # Use your own merchant ID and Key, set use_sandbox to false for production
+  configuration = F2N[:google_merchant_info]
+
+  @frontend = Google4R::Checkout::Frontend.new(configuration)
+
+  history_command = @frontend.create_order_report_command(most_recent_notification_time, Time.now() + 3.days)
+  csv = history_command.send_to_google_checkout
 end
 
 class TaxTableFactory
