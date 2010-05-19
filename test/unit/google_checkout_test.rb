@@ -1,4 +1,5 @@
-require 'google_checkout'
+require 'rubygems'
+require 'google4r/checkout'
 
 class GoogleCheckoutTest < ActiveSupport::TestCase
   test 'purchase event communicates with google checkout api' do
