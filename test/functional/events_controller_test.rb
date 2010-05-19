@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'date'
 
 class EventsControllerTest < ActionController::TestCase
   include Devise::TestHelpers
@@ -40,13 +41,15 @@ class EventsControllerTest < ActionController::TestCase
     # should fail without authentication
     assert_response 302
   end
+
   test "create event after sign in" do
     # once signed in, should be available
     self.signin_as_testuser
     assert_difference('Event.count') do
-      post :create, :event => { :name=>'test event', :admin_password=>'simple'}
+      post :create, :event => { :name=>'test event', :admin_password=>'simple', :not_before => Date.today(), :not_after => Date.today + 3 }
     end
 
+    assert assigns(:event).user == users(:testuser)
     assert_redirected_to event_path(assigns(:event))
   end
 
@@ -79,17 +82,20 @@ class EventsControllerTest < ActionController::TestCase
 
     # once signed in, should be available
     self.signin_as_testuser
-    put :update, :id => @event.to_param, :event => { :name=>'test event', :admin_password=>'simple'}
+    put :update, :id => @event.to_param, :event => { :name=>'test event', :admin_password=>'simple' }
     assert_redirected_to event_path(assigns(:event))
   end
 
-  test "should destroy event" do
+  test "destroy event should fail without signin" do
 
     # should fail without authentication
     assert_difference('Event.count', difference=0) do
       delete :destroy, :id => @event.to_param
     end
     assert_response 302
+  end
+
+  test "should destroy event" do
 
     # once signed in, should be available
     self.signin_as_testuser
@@ -98,5 +104,19 @@ class EventsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to events_path
+  end
+
+  test "should create event configuration" do
+    self.signin_as_testuser
+    response = post :create, :event => { :name=>'test event',
+                              :not_before => '2010-05-17',
+                              :not_after => '2010-05-23',
+                              :admin_password=>'ALLUPPPERCASE'}
+    assert_redirected_to event_path( assigns( :event ))
+
+
+    get :configuration, :id => @event.to_param
+    assert_match %r{application\/octet-stream}, @response.headers["Content-Type"]
+
   end
 end

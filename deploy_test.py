@@ -10,6 +10,7 @@ import sys
 import os
 import os.path as op
 import shutil
+import time
 
 sys.path.append( '../deploy')
 import deploy
@@ -44,6 +45,9 @@ def step_1():
     # Is this the first time?
     if not op.exists('.git'):
         create_git_and_heroku_app()
+
+        info('Waiting 5 seconds for Heroku to finish.')
+        time.sleep(5)
         done_msg = '''
 -----------------------------------------------------------------------------
 You are creating a Heroku app for the first time. Please check the list
@@ -92,7 +96,7 @@ Done. Type "heroku info" to see where your new heroku application is.
 ''')
     
 def step_2():
-    deploy.step_2('.')
+    deploy.step_2('.', git_push_app="heroku master")
 
 
 #

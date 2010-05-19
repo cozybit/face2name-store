@@ -174,24 +174,24 @@ end
 # see: {svn}/face2name/tests/openfire/extract.sh
 #
 def openssl_certificates( temp_dir, keys_dir, cert_serial_num, event_name, not_before, not_after )
-#  raise "not_before should be a Time object but is #{not_before.class.name}."\
-#    unless not_before.respond_to? Time
-#  raise "not_after should be a Time object but is #{not_after.class.name}." \
-#    unless not_after.instance_of? Time
+  #  raise "not_before should be a Time object but is #{not_before.class.name}."\
+  #    unless not_before.respond_to? Time
+  #  raise "not_after should be a Time object but is #{not_after.class.name}." \
+  #    unless not_after.instance_of? Time
 
   # output files:
   ssl_server_cert = File.join(keys_dir, "f2n_server.cert")
   ssl_server_key  = File.join(keys_dir, "f2n_server.key")
   f2n_server_csr  = File.join(keys_dir, "f2n_server.csr")
   # temporary files:
+  f2n_server_csr  = File.join(temp_dir, "f2n_server.csr")
   openssl_config  = File.join(temp_dir, "openssl.cnf")
 
   # input files needed:
-  lib_fldr = File.join( rails_root_fldr, 'lib' )
-  ssl_config_template = File.join( lib_fldr, 'openssl.cnf.tmpl')
   # ssl_ca_cert and ssl_ca_key should be the same files used to configure your server, i.e. passed to "extract.sh"
-  ssl_ca_cert = File.join( lib_fldr, 'f2n_ca.crt' )
-  ssl_ca_key =  File.join( lib_fldr, 'f2n_ca.key.unsecure' )
+  ssl_ca_cert = File.join(F2N[:ca_cert])
+  ssl_ca_key =  File.join(F2N[:ca_key])
+  ssl_config_template = File.join(F2N[:openssl_conf_tmpl])
 
   # Check needed input files are there
   for f in [ssl_config_template, ssl_ca_cert, ssl_ca_key]
@@ -217,30 +217,20 @@ def openssl_certificates( temp_dir, keys_dir, cert_serial_num, event_name, not_b
   f.write( config )
   f.close()
 
-  # Generate key
-  run_cmd( "openssl genrsa -out \"#{ssl_server_key}\" 1024  2>&1", #>/dev/null 2>&1",
+  run_cmd( "openssl genrsa -out \"#{ssl_server_key}\" 1024  2>&1",
     "Server key generation failed" )
-#         openssl genrsa -out "${SSL_SERVER_KEY}" 1024 >/dev/null 2>&1
-#         check_error "Server key generation failed"
 
   run_cmd( "openssl req -config \"#{openssl_config}\" -new -key \"#{ssl_server_key}\" -out \"#{f2n_server_csr}\" 2>&1",
-#  run_cmd( "openssl req -config \"#{openssl_config}\" -new -key \"#{ssl_server_key}\" -out \"#{f2n_server_csr}\" >/dev/null 2>&1",
     "Server CSR generation failed" )
-#         openssl req -config "${conf}" -new -key "${SSL_SERVER_KEY}" -out "${path}/f2n_server.csr" >/dev/null 2>&1
-#         check_error "Server CSR generation failed"
-
 
   # Sign server cert
   days = ((not_after - Time.now()) / (60*60*24)).ceil # Convert seconds to days
-  f2n_serial = File.join( lib_fldr, 'f2n.serial' )
   cmd = "openssl x509 -req -extfile \"#{openssl_config}\" -extensions \"usr_cert\" "+
       "-in \"#{f2n_server_csr}\" -CA \"#{ssl_ca_cert}\" -CAkey \"#{ssl_ca_key}\" "+
       "-out \"#{ssl_server_cert}\" -days #{days} -CAcreateserial "+
       "-set_serial #{cert_serial_num} 2>&1"
-#      "-CAserial \"#{f2n_serial}\" 2>&1"
+
   run_cmd( cmd, "Certificate signing failed")
-#         openssl x509 -req -extfile "${conf}" -extensions "usr_cert" -in "${path}/f2n_server.csr" -CA "${SSL_CA_CERT}" -CAkey "${SSL_CA_KEY}" -out "${SSL_SERVER_CERT}" -days 365 -CAcreateserial -CAserial "${path}/f2n.serial" >/dev/null 2>&1
-#         check_error "Certificate signing failed"
 
   return ssl_server_cert
 end
@@ -261,14 +251,7 @@ def pk_decrypt(encrypted, private_k)
 end
 
 def crypt(plaintext)
-  keydir = File.join(rails_root_fldr, 'lib', 'keys')
-  encrypted_key = File.open(File.join(keydir, 'f2n_config_bundle_enc.key'), 'r').read()
-  # public_key = File.join(keydir, 'f2n_config_bundle_pub.key')
-  private_key = File.open(File.join(keydir, 'key.pem'), 'r').read()
-
-  aes_key = pk_decrypt(encrypted_key, private_key)
-
-  encrypted = aes(plaintext, aes_key)
+  aes(plaintext, File.read(F2N[:encryption_key]))
 
   #encrypted_key = pk_encrypt(aes_key, File.read(File.join(rails_root_fldr, 'lib', 'keys', 'public.pem')))
 
@@ -296,6 +279,9 @@ end
 
 
 def make_configuration_bundle( cert_serial_num, event_name, admin_pass, not_before, not_after )
+  raise 'cert_serial_num must be an Integer' unless cert_serial_num.kind_of? Integer
+  raise 'event_name must be a String' unless event_name.kind_of? String
+  raise 'admin_pass must be a String or nil' unless admin_pass==nil || admin_pass.kind_of?( String )
 
   # build directory structure on disk
   tempdir = make_temp_dir()

@@ -1,0 +1,12 @@
+.grid_8
+  %h1.title.tk-bree Forgot your password?
+
+  = form_for(resource, :as => resource_name, :url => password_path(resource_name)) do |f|
+    = devise_error_messages!
+    .field
+      = f.label :email
+      = f.text_field :email
+    .field
+      = f.submit("Send me reset instructions", :class => 'btn tk-bree')
+
+  = render :partial => "devise/shared/links"

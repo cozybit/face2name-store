@@ -61,10 +61,10 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
   test "PK encryption is reversible" do
     plaintext = 'This is the plaintext'
 
-    public_key = File.read(File.join(rails_root_fldr, 'lib', 'keys', 'f2n_config_bundle_pub.key'))
+    public_key = File.read(F2N[:test_public_key])
     encrypted = pk_encrypt(plaintext, public_key)
 
-    private_key = File.read(File.join(rails_root_fldr, 'lib', 'keys', 'key.pem'))
+    private_key = File.read(F2N[:test_private_key])
 
     private = OpenSSL::PKey::RSA.new(private_key)
     unencrypted = private.private_decrypt(encrypted)
@@ -72,32 +72,32 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     assert plaintext == unencrypted
   end
 
-  test 'crypt file with PK encrypted AES key' do
-    plaintext = 'This is the plaintext'
-    encrypted = crypt(plaintext)
-
-    f = File.open('test.crypted', 'w')
-    f.write(encrypted)
-    f.close()
-
-    working = File.expand_path(File.dirname(f.path))
-
-    crypted_file = File.expand_path(f.path)
-    output_file = File.join(working, 'test.plaintext')
-
-    cipher_tool_path = File.expand_path(File.join(rails_root_fldr, 'f2n_scripts', 'f2n-cipher-1.0.0'))
-    jar = File.join(cipher_tool_path, "f2n-cipher-1.0.0.jar")
-    privk = File.join(cipher_tool_path, 'keys', 'f2n_config_bundle.key' )
-
-    cmd = "cd #{cipher_tool_path}; java -jar #{jar} -d #{crypted_file} -R #{output_file} -P #{privk}"
-    run_cmd( cmd, "Trying to decrypt the test file." )
-
-    unencrypted = File.open(output_file).read
-
-    File.delete(crypted_file)
-    File.delete(output_file)
-
-    assert plaintext == unencrypted, 'Unencrypted data does not match plaintext'
-  end
+#  test 'crypt file AES key and decrypt with f2n_cipher' do
+#    plaintext = 'This is the plaintext'
+#    encrypted = crypt(plaintext)
+#
+#    f = File.open('test.crypted', 'w')
+#    f.write(encrypted)
+#    f.close()
+#
+#    working = File.expand_path(File.dirname(f.path))
+#
+#    crypted_file = File.expand_path(f.path)
+#    output_file = File.join(working, 'test.plaintext')
+#
+#    cipher_tool_path = F2N[:f2n_cipher_root]
+#    jar = File.join(cipher_tool_path, "f2n-cipher-1.0.0.jar")
+#    privk = File.join(cipher_tool_path, 'keys', 'f2n_config_bundle.key' )
+#
+#    cmd = "cd #{cipher_tool_path}; java -jar #{jar} -d #{crypted_file} -R #{output_file} -P #{privk}"
+#    run_cmd( cmd, "Trying to decrypt the test file." )
+#
+#    unencrypted = File.open(output_file).read
+#
+#    File.delete(crypted_file)
+#    File.delete(output_file)
+#
+#    assert plaintext == unencrypted, 'Unencrypted data does not match plaintext'
+#  end
 
 end

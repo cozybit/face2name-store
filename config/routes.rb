@@ -1,20 +1,15 @@
 F2nstore::Application.routes.draw do |map|
 
   devise_for :users
-  # Authentication
 
   resource :home
 
+  resources :users
   resources :events do
     member do
       get :configuration
     end
   end
-
-  namespace :admin do
-    resources :users
-  end
-
 
   get "home/index"
 

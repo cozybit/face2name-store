@@ -1,0 +1,31 @@
+:css
+  table {
+    width: 100%;
+  }
+
+  td.spinner {
+    background-position: 95px 1px;
+  }
+
+.grid_8
+  %h1.title.tk-bree Listing users
+
+  %table
+    %tr
+      %th.left ID
+      %th.left Email
+      %th #Events
+      %th Unlimited
+
+    - @users.each do |user|
+      %tr
+        %td
+          = user.id
+        %td
+          %a{:href => url_for(user)}
+            = user.email
+        %td.center
+          = user.events.length
+        %td.center
+          %input.user_field_toggle{:type => 'checkbox', :name=> 'is_unlimited', :checked => ('checked' if user.is_unlimited?), :rel => user_path(user.id)}
+

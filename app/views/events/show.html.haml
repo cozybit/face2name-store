@@ -1,0 +1,20 @@
+.grid_8
+  %h1.title.tk-bree Event Details
+
+  %ul
+    %li
+      %b Name:
+      = @event.name
+    %li
+      %b Start date:
+      = @event.not_before
+    %li
+      %b End date:]
+      = @event.not_after
+    %li
+      %b Administrator password:
+      = @event.admin_password
+
+  .actions.clearfix
+    %a.btn.tk-bree{:href => url_for(configuration_event_path(@event))} Download Configuration
+    %a.btn.tk-bree{:href => url_for(edit_event_path(@event))} Edit

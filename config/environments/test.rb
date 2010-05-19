@@ -31,5 +31,20 @@ F2nstore::Application.configure do
   # config.active_record.schema_format = :sql
 
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
-
 end
+
+F2N.merge!({
+  # Configure CA Certs used for signing Event Certs
+  :ca_cert => Rails.root.join('test', 'resources', 'crypto', 'ca.cert'),
+  :ca_key => Rails.root.join('test', 'resources', 'crypto', 'ca.key'),
+
+  # Configure keys used for encrypting Event bundles
+  :encryption_key => Rails.root.join('test', 'resources', 'crypto', 'aes.key'),
+
+  # Configure path to f2n_cipher and it's associated resources
+  :f2n_cipher_root => Rails.root.join('test', 'resources', 'f2n-cipher-1.0.0'),
+
+  # Configure path to keys for rudimentary PK encryption testing
+  :test_public_key => Rails.root.join('test', 'resources', 'crypto', 'public.pem'),
+  :test_private_key => Rails.root.join('test', 'resources', 'crypto', 'private.pem')
+})

@@ -1,0 +1,25 @@
+= form_for(@event) do |f|
+  - if @event.errors.any?
+    #errorExplanation
+      %h2
+        = pluralize(@event.errors.count, "error")
+        prohibited this event from being saved:
+      %ul
+        - @event.errors.full_messages.each do |msg|
+          %li
+            = msg
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :not_before
+    = f.date_select :not_before
+  .field
+    = f.label :not_after
+    = f.date_select :not_after
+  .field
+    = f.label :admin_password
+    = f.text_field :admin_password
+  .actions.clearfix
+    = f.submit(:class => 'btn tk-bree')

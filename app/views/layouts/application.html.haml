@@ -1,0 +1,38 @@
+!!!
+%html
+  %head
+    %title Face2Name Store
+    %script{:type => "text/javascript", :src => "http://use.typekit.com/jhj8vgz.js" }
+    %script{:type => "text/javascript"}
+      try{Typekit.load();}catch(e){}
+    = stylesheet_link_tag 'reset.css', 'grid.css', 'face2name.css', 'button.css', 'uniform.default.css'
+    = javascript_include_tag 'jquery-1.4.2.min.js', 'jquery.uniform.min.js', 'jquery.color.js', 'application.js'
+    = csrf_meta_tag
+    .container.container_12.clearfix#header
+      %a{:href => '/'}
+        %h1.tk-bree face2name
+      #user_status
+        - if user_signed_in?
+          welcome
+          = current_user.email
+          |
+          = link_to "sign out", destroy_user_session_path
+    .clear
+    .container.container_12.body
+      = yield
+      .grid_1
+        .divider
+      .grid_3.sidebar
+        %a{:href => url_for(:controller => '/home', :action => :download)}
+          %h1.title.tk-bree Downloads
+        %p
+          %a{:href => url_for(:controller => '/home', :action => :download)} Download
+          the face to name server or a test configuration bundle for demonstration purposes.
+        - if current_user and current_user.role == 'admin'
+          %a{:href => url_for(:controller => '/users')}
+            %h1.title.tk-bree Manage Users
+          %p
+            %a{:href => url_for(:controller => '/users')} View and Configure
+            face2name users.
+    #footer
+

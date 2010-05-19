@@ -14,5 +14,6 @@ admin = User.create(
     :password_confirmation => 'simple'
 )
 
-admin.confirmed_at = DateTime.now()
+admin.role = 'admin'
+# admin.confirmed_at = DateTime.now()
 admin.save!

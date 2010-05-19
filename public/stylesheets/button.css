@@ -1,0 +1,52 @@
+.g-button {
+  margin: 10px;
+  padding: 2px 15px 4px;
+
+  border: 3px solid #008c00;
+  -moz-border-radius: 9px;
+  -webkit-border-radius: 9px;
+  border-radius: 9px;
+  -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+
+  background: #91be15;
+  background: -moz-linear-gradient(top, #91be15, #84b710 27px, #7ab200 27px, #86bb08);
+  background: -webkit-gradient(linear, top left, bottom left, from(#91be15), color-stop(0.5, #84b710), color-stop(0.5, #7ab200), to(#86bb08));
+
+  color: #3f5800;
+  font-size: 25px;
+  line-height: 50px;
+  font-weight: normal;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.6);
+
+  cursor: pointer;
+}
+.g-button:hover {
+  background:#8eb92c;
+  background: -moz-linear-gradient(top, #b1cb3a, #8eb92c 27px, #73ab00 27px, #92c415);
+  background: -webkit-gradient(linear, left top, left bottom, from(#b1cb3a), color-stop(0.5, #8eb92c), color-stop(0.5, #73ab00)x, to(#92c415));
+}
+
+.g-ico { background:#397809; -moz-border-radius:33px; -webkit-border-radius:33px; width:33px; height: 33px; float: left; margin-top:10px; }
+  .g-ico div { margin: 7px 0 0 12px; width:0; height:0; border-top: 9px solid transparent; border-left: 14px solid #fff; border-bottom: 9px solid transparent; border-right: 0; }
+.g-label { float: left; padding: 0 10px; }
+
+
+.big-text {
+  display: block;
+  width: 600px;
+  font-size: 2.0em;
+  font-weight: bold;
+}
+
+.big-shadow {
+  color: rgba(50, 50, 50, 0.3);
+  width: 600px;
+  font-size: 2.0em;
+  font-weight: bold;
+  -moz-transform: scale(2, 10) translate(153px, -13px);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}

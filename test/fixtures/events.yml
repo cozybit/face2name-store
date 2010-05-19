@@ -3,9 +3,12 @@
 one:
   name: "Event One"
   not_before: 2010-05-05
-  not_after: 2010-05-05
+  not_after: 2010-05-07
+  user: testuser
+
 
 two:
   name: "Cruise Two"
   not_before: 2010-05-05
-  not_after: 2010-05-05
+  not_after: 2010-05-07
+  user: testuser

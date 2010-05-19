@@ -13,7 +13,7 @@ class ActiveSupport::TestCase
   
   # Add more helper methods to be used by all tests here...
   def signin_as_testuser
-    @user = users(:testuser) # from test fixtrure
+    @user = users(:testuser) # from test fixture
     @controller.sign_in @user
     assert @controller.user_signed_in?
   end

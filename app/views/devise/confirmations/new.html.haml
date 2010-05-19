@@ -1,0 +1,12 @@
+.grid_8
+  %h1.title.tk-bree Resend confirmation instructions
+
+  = form_for(resource, :as => resource_name, :url => confirmation_path(resource_name)) do |f|
+    = devise_error_messages!
+    .field
+      = f.label :email
+      = f.text_field :email
+    .actions
+      = f.submit("Resend confirmation instructions", :class => 'btn tk-bree')
+
+  = render :partial => "devise/shared/links"
