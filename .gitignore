@@ -4,3 +4,4 @@ log/*.log
 tmp/**/*
 .svn
 .DS_Store
+.idea
