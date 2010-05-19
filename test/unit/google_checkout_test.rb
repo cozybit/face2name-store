@@ -1,3 +1,4 @@
+require 'test_helper'
 require 'google_checkout'
 
 class GoogleCheckoutTest < ActiveSupport::TestCase
