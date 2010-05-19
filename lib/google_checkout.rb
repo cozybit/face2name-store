@@ -1,3 +1,4 @@
+require 'rubygems'
 require "google4r/checkout"
 
 def purchase_event(event_id)
