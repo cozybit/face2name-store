@@ -80,7 +80,7 @@ class EventsControllerTest < ActionController::TestCase
     self.signin_as_testuser
     post :create, :event => { :name=>'test event', :admin_password=>'simple', :not_before => Date.today(), :not_after => Date.today + 3 }
 
-    assert assigns(:event).purchase_status != 'PAID'
+    assert assigns(:event).status != :paid
   end
 
   test "new event for unlimted users are marked PAID" do
@@ -88,7 +88,7 @@ class EventsControllerTest < ActionController::TestCase
     @controller.sign_in users(:unlimited)
     post :create, :event => { :name=>'test event', :admin_password=>'simple', :not_before => Date.today(), :not_after => Date.today + 3 }
 
-    assert assigns(:event).purchase_status == 'PAID'
+    assert assigns(:event).status == :paid
   end
 
   test "should show event" do
@@ -144,27 +144,28 @@ class EventsControllerTest < ActionController::TestCase
     assert_redirected_to events_path
   end
 
-  test "should create event configuration" do
+  test "should redirect configuration request for unpaid event" do
     self.signin_as_testuser
-    response = post :create, :event => { :name=>'test event',
-                              :not_before => '2010-05-17',
-                              :not_after => '2010-05-23',
-                              :admin_password=>'ALLUPPPERCASE'}
-    assert_redirected_to event_path( assigns( :event ))
 
     get :configuration, :id => @event.to_param
-    assert_match %r{application\/octet-stream}, @response.headers["Content-Type"]
+    assert_redirected_to event_path( assigns( :event ))
+  end
 
+  test "should create event configuration for paid event" do
+    self.signin_as_testuser
+
+    get :configuration, :id => events(:paid).to_param
+    assert_match %r{application\/octet-stream}, @response.headers["Content-Type"]
   end
 
   test "should redirect to payment gateway url" do
     self.signin_as_testuser
-    assert @event.purchase_status == nil
+    assert @event.status == nil
 
     get :purchase, :id => @event.to_param
 
     @event.reload
-    assert @event.purchase_status == 'UNPAID'
+    assert @event.status == 'UNPAID'
 
     assert_response 302
     assert response.location.match(/google\.com/)
@@ -175,7 +176,7 @@ class EventsControllerTest < ActionController::TestCase
 
     get :confirm, :id => @event.to_param, :key => @event.download_key + 'foo'
 
-    assert @event.purchase_status != 'PAID'
+    assert @event.status != :paid
 
     assert_response 403
   end
@@ -187,6 +188,6 @@ class EventsControllerTest < ActionController::TestCase
 
     @event.reload
     assert_redirected_to event_path(assigns( :event ))
-    assert_equal 'PAID', @event.purchase_status
+    assert_equal :paid, @event.status
   end
 end

@@ -14,6 +14,9 @@
     %li
       %b Administrator password:
       = @event.admin_password
+    %li
+      %b Status
+      = display_status(@event)
 
   .actions.clearfix
     - if @event.paid?

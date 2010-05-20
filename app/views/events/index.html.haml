@@ -17,6 +17,7 @@
       %th.left Name
       - if current_user.is_admin?
         %th.left Owner
+      %th.right Status
       %th.right Begins
       %th.right Ends
 
@@ -31,6 +32,8 @@
         - if current_user.is_admin?
           %td
             = event.user.email
+        %td.right
+          = display_status(event)
         %td.right
           = event.not_before.strftime('%b %d, %Y')
         %td.right

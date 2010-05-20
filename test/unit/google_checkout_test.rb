@@ -7,7 +7,7 @@ class GoogleCheckoutTest < ActiveSupport::TestCase
     response = initiate_event_purchase(events(:one), 'http://localhost:3000/foo')
 
     assert events(:one).purchase_serial_number != nil
-    assert events(:one).purchase_status = 'UNPAID'
+    assert events(:one).status = 'UNPAID'
 
     assert response.redirect_url != nil
     assert response.serial_number != nil

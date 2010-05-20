@@ -24,7 +24,7 @@ def initiate_event_purchase(event, confirmation_url)
   response = checkout_command.send_to_google_checkout
 
   event.purchase_serial_number = response.serial_number
-  event.purchase_status = 'UNPAID'
+  event.status = 'UNPAID'
   event.save!
 
 

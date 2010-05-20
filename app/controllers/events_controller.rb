@@ -48,7 +48,7 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(params[:event].update(:user => current_user()))
 
-    @event.purchase_status = 'PAID' if current_user.is_unlimited?
+    @event.status = :paid if current_user.is_unlimited?
     
     respond_to do |format|
       if @event.save
@@ -92,6 +92,9 @@ class EventsController < ApplicationController
   # GET /event/1/configuration
   def configuration
     @event = Event.find( params[:id] )
+
+    return redirect_to event_url(@event) if !@event.downloadable?
+    
     config_bundle_fname, temp_dir = make_configuration_bundle( @event.id,
        @event.name,
        @event.admin_password, @event.not_before, @event.not_after )
@@ -115,7 +118,7 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
 
     if (@event.download_key == params[:key])
-      @event.update_attribute(:purchase_status, 'PAID')
+      @event.update_attribute(:status, :paid)
       redirect_to(@event, :notice => 'Thank you for your purchase.')
     else
       redirect_to '/403.html', :status => 403

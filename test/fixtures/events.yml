@@ -24,3 +24,21 @@ three:
   admin_password: simple
   download_key: BBCDEFGHIJKLMNOP
 
+paid:
+  name: "Cruise Paid"
+  not_before: 2011-05-05
+  not_after: 2011-05-07
+  user: testuser
+  admin_password: simple
+  download_key: BBCDEFGHIJKLMNOP
+  status: :paid
+
+paid:
+  name: "Cruise Paid"
+  not_before: 2011-05-05
+  not_after: 2011-05-07
+  user: testuser
+  admin_password: simple
+  download_key: BBCDEFGHIJKLMNOP
+  status: :paid
+

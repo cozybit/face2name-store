@@ -5,6 +5,8 @@ class EventValidator < ActiveModel::Validator
 end
 
 class Event < ActiveRecord::Base
+  serialize :status
+
   belongs_to :user
 
   validates :not_before, :presence => true
@@ -29,6 +31,14 @@ class Event < ActiveRecord::Base
   end
 
   def paid?
-    self.purchase_status == 'PAID'
+    self.status == :paid
+  end
+
+  def downloadable?
+    [:paid, :downloaded].include? self.status  
+  end
+
+  def downloaded?
+    self.status == :downloaded
   end
 end
