@@ -28,7 +28,7 @@ class Event < ActiveRecord::Base
     self.download_key = the_key
   end
 
-  def purchased?
+  def paid?
     self.purchase_status == 'PAID'
   end
 end

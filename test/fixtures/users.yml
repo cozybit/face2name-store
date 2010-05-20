@@ -16,4 +16,11 @@ testadmin:
   password_salt: "Gawuq1VZP2u-7rnjMG9h"
 #    confirmed_at: '2010-05-14 20:49:42'
   role: 'admin'
+
+unlimited:
+  email: "unlimted@test.com"
+  encrypted_password: "213a179d44609451cf10225b9159458d85c01b11"
+  password_salt: "Gawuq1VZP2u-7rnjMG9h"
+#    confirmed_at: '2010-05-14 20:49:42'
+  is_unlimited: true
   

@@ -6,7 +6,9 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.xml
   def index
-    @events = Event.all
+    @events = current_user.is_admin?? Event.all : current_user.events
+
+    @events.sort! { |a, b| b.not_before <=> a.not_before }
 
     respond_to do |format|
       format.html # index.html.haml
@@ -46,6 +48,8 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(params[:event].update(:user => current_user()))
 
+    @event.purchase_status = 'PAID' if current_user.is_unlimited?
+    
     respond_to do |format|
       if @event.save
         format.html { redirect_to(@event, :notice => 'Event was successfully created.') }

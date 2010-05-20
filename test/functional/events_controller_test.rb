@@ -19,6 +19,28 @@ class EventsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:events)
   end
 
+  test "should get index showing only events belonging to user" do
+    ids = users(:testuser).events.collect { |e| e.id }
+
+    self.signin_as_testuser
+    get :index
+
+    events = assigns(:events)
+    assert_equal ids.length, events.length
+
+    events.each do |e|
+      assert ids.pop(e.id)
+    end
+  end
+
+  test "should get index showing all events for admin" do
+    @controller.sign_in users(:testadmin)
+
+    get :index
+
+    assert_equal Event.all.length, assigns(:events).length
+  end
+
   test "new event should be blocked without signin" do
     # should fail without authentication
     get :new
@@ -51,6 +73,22 @@ class EventsControllerTest < ActionController::TestCase
 
     assert assigns(:event).user == users(:testuser)
     assert_redirected_to event_path(assigns(:event))
+  end
+
+  test "new event for limited users are not marked PAID" do
+    # once signed in, should be available
+    self.signin_as_testuser
+    post :create, :event => { :name=>'test event', :admin_password=>'simple', :not_before => Date.today(), :not_after => Date.today + 3 }
+
+    assert assigns(:event).purchase_status != 'PAID'
+  end
+
+  test "new event for unlimted users are marked PAID" do
+    # once signed in, should be available
+    @controller.sign_in users(:unlimited)
+    post :create, :event => { :name=>'test event', :admin_password=>'simple', :not_before => Date.today(), :not_after => Date.today + 3 }
+
+    assert assigns(:event).purchase_status == 'PAID'
   end
 
   test "should show event" do

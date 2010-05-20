@@ -8,12 +8,19 @@ one:
   admin_password: simple
   download_key: ABCDEFGHIJKLMNOP
 
-
 two:
   name: "Cruise Two"
   not_before: 2010-05-05
   not_after: 2010-05-07
   user: testuser
+  admin_password: simple
+  download_key: BBCDEFGHIJKLMNOP
+
+three:
+  name: "Cruise Two"
+  not_before: 2010-05-05
+  not_after: 2010-05-07
+  user: testadmin
   admin_password: simple
   download_key: BBCDEFGHIJKLMNOP
 

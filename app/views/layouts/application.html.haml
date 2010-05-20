@@ -23,16 +23,23 @@
       .grid_1
         .divider
       .grid_3.sidebar
-        %a{:href => url_for(:controller => '/home', :action => :download)}
-          %h1.title.tk-bree Downloads
+        - if current_user
+          %p
+            %a.tk-bree{:href => url_for(url_for(new_event_path()))} Create New Event
+            %br
+            Create and purchase a new event configuration.
+          - if current_user.events.length > 0
+            %p
+              %a.tk-bree{:href => url_for(:controller => '/events')} Manage Events
+              %br
+              Manage your existing events.
         %p
           %a{:href => url_for(:controller => '/home', :action => :download)} Download
           the face to name server or a test configuration bundle for demonstration purposes.
         - if current_user and current_user.role == 'admin'
-          %a{:href => url_for(:controller => '/users')}
-            %h1.title.tk-bree Manage Users
           %p
-            %a{:href => url_for(:controller => '/users')} View and Configure
-            face2name users.
+            %a.tk-bree{:href => url_for(:controller => '/users')} Manage Users
+            %br
+            View and Configure face2name users.
     #footer
 

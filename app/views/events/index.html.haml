@@ -1,0 +1,42 @@
+:css
+  table {
+    width: 100%;
+  }
+
+  td.spinner {
+    background-position: 95px 1px;
+  }
+
+.grid_8
+  %h1.title.tk-bree Listing Events
+
+  %table
+    %tr
+      - if current_user.is_admin?
+        %th.left ID
+      %th.left Name
+      - if current_user.is_admin?
+        %th.left Owner
+      %th.right Begins
+      %th.right Ends
+
+    - @events.each do |event|
+      %tr
+        - if current_user.is_admin?
+          %td
+            = event.id
+        %td
+          %a{ :href => url_for(event) }
+            = event.name
+        - if current_user.is_admin?
+          %td
+            = event.user.email
+        %td.right
+          = event.not_before.strftime('%b %d, %Y')
+        %td.right
+          = event.not_after.strftime('%b %d, %Y')
+
+  %p
+    %a.btn.tk-bree{:href => (url_for new_event_path)}
+      %span
+        Create New Event

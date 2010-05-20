@@ -17,7 +17,7 @@ class GoogleCheckoutTest < ActiveSupport::TestCase
     # purchase_response = initiate_event_purchase(events(:one))
 
     response = check_event_purchase_status(Time.now() - 1.day)
-    puts response.split("\n")
+    #puts response.split("\n")
 
     assert response != nil
   end

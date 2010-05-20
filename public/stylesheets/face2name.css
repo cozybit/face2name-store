@@ -182,6 +182,14 @@ th {
   text-align: center;
 }
 
+.sidebar {
+  margin-top: 15px;
+}
+
+.sidebar a.tk-bree {
+  font-size: 15px;
+}
+
 .fieldWithErrors {
   display: table;
 }
