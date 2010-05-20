@@ -11,12 +11,13 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
   # Can we extract data from the certificate? E.g.
   # openssl x509 -noout -text -in f2n_server.cert
   test "no exceptions raised" do
-    event_name = 'My Great Conference-'+(rand(92-65)+65).chr  # add something to change the filename
-    serial_num = rand(100)+1
-    make_configuration_bundle( serial_num, event_name,
-      'simple',
-      Time.utc(2010, 5, 10),
-      Time.utc(2010, 5, 15) )
+    event = Event.create(:name => 'My Great Conference-'+(rand(92-65)+65).chr,
+                         :not_before => Time.utc(2010, 5, 10),
+                         :not_after => Time.utc(2010, 5, 15),
+                         :admin_password => 'simple')
+    event.id = rand(100)+1
+
+    make_configuration_bundle( event )
   end
 
   test "certificate data" do

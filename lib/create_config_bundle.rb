@@ -278,11 +278,7 @@ def f2n_cipher(tgz_filename)
 end
 
 
-def make_configuration_bundle( cert_serial_num, event_name, admin_pass, not_before, not_after )
-  raise 'cert_serial_num must be an Integer' unless cert_serial_num.kind_of? Integer
-  raise 'event_name must be a String' unless event_name.kind_of? String
-  raise 'admin_pass must be a String or nil' unless admin_pass==nil || admin_pass.kind_of?( String )
-
+def make_configuration_bundle( event )
   # build directory structure on disk
   tempdir = make_temp_dir()
   tarball_source = File.join( tempdir, 'to_tar_gz' )
@@ -291,21 +287,21 @@ def make_configuration_bundle( cert_serial_num, event_name, admin_pass, not_befo
   
 
   openssl_certificates( tempdir, File.join( tarball_source, 'keys' ),
-    cert_serial_num, event_name, not_before, not_after )
+    event.id, event.name, event.not_before, event.not_after )
 
   # Make admin password File
   f = File.new( File.join( tarball_source, 'admin_password.txt' ), 'wb' )
-  f.write( admin_pass )
+  f.write( event.admin_password )
   f.close()
 
-#???? TESTING
-File.open( File.join(tarball_source, 'users.xml'), 'w') do |f|
-  test_users = [
-      ['Winston Wolff', 'winston@carbonfive.com', nil] ,
-      ['Gonzalo Arreche', 'garreche@gmail.com', nil]
-  ]
-  f.write(make_users_xml(test_users ))
-end
+  #???? TESTING
+  File.open( File.join(tarball_source, 'users.xml'), 'w') do |f|
+    test_users = [
+        ['Winston Wolff', 'winston@carbonfive.com', nil] ,
+        ['Gonzalo Arreche', 'garreche@gmail.com', nil]
+    ]
+    f.write(make_users_xml(test_users ))
+  end
 
   # !!! Make server passphrase file (Yikes, is this right?)
   f = File.new( File.join( tarball_source, 'keys', 'f2n_server.pass' ), 'wb' )
@@ -313,7 +309,7 @@ end
   f.close()
 
   # tar/gzip it.
-  tgz_filename = tar_gz( event_name, tempdir, tarball_source )
+  tgz_filename = tar_gz( event.name, tempdir, tarball_source )
 
   # encrypt it
   cipher_filename = f2n_cipher(tgz_filename )

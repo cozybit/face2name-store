@@ -113,15 +113,30 @@ class EventsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should update event" do
-    put :update, :id => @event.to_param, :event => { :name=>'test event', :admin_password=>'simple'}
+  test "should redirect to show when trying to edit a downloaded event" do
+    self.signin_as_testuser
+    event = events(:downloaded)
+
+    get :edit, :id => event.to_param
+    assert_redirected_to event_path(event)
+  end
+
+  test "should update event only when authenticated" do
+    original_name = @event.name
+    put :update, :id => @event.to_param, :event => { :name=>'updated event', :admin_password=>'simple'}
     # should fail without authentication
     assert_response 302
 
+    @event.reload
+    assert_equal original_name, @event.name
+
     # once signed in, should be available
     self.signin_as_testuser
-    put :update, :id => @event.to_param, :event => { :name=>'test event', :admin_password=>'simple' }
+    put :update, :id => @event.to_param, :event => { :name=>'updated event', :admin_password=>'simple' }
     assert_redirected_to event_path(assigns(:event))
+
+    @event.reload
+    assert_equal 'updated event', @event.name
   end
 
   test "destroy event should fail without signin" do
@@ -158,6 +173,16 @@ class EventsControllerTest < ActionController::TestCase
     assert_match %r{application\/octet-stream}, @response.headers["Content-Type"]
   end
 
+  test "should mark event as downloaded" do
+    self.signin_as_testuser
+
+    event = events(:paid)
+    get :configuration, :id => event.to_param
+
+    event.reload
+    assert event.downloaded?
+  end
+
   test "should redirect to payment gateway url" do
     self.signin_as_testuser
     assert @event.status == nil
@@ -189,5 +214,20 @@ class EventsControllerTest < ActionController::TestCase
     @event.reload
     assert_redirected_to event_path(assigns( :event ))
     assert_equal :paid, @event.status
+  end
+
+  test 'should ignore updating of downloaded event' do
+    event = events(:downloaded)
+
+    original_name = event.name
+
+    self.signin_as_testuser
+
+    put :update, :id => event.to_param, :event => { :name=>'update downloaded', :admin_password=>'simple' }
+
+    event.reload
+    assert_equal original_name, event.name
+
+    assert_redirected_to event_path(assigns(:event))
   end
 end

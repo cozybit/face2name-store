@@ -41,6 +41,8 @@ class EventsController < ApplicationController
   # GET /events/1/edit
   def edit
     @event = Event.find(params[:id])
+
+    return redirect_to event_url(@event) if @event.downloaded?
   end
 
   # POST /events
@@ -65,6 +67,8 @@ class EventsController < ApplicationController
   # PUT /events/1.xml
   def update
     @event = Event.find(params[:id])
+
+    return redirect_to event_url(@event) if @event.downloaded?
 
     respond_to do |format|
       if @event.update_attributes(params[:event])
@@ -95,13 +99,13 @@ class EventsController < ApplicationController
 
     return redirect_to event_url(@event) if !@event.downloadable?
     
-    config_bundle_fname, temp_dir = make_configuration_bundle( @event.id,
-       @event.name,
-       @event.admin_password, @event.not_before, @event.not_after )
+    config_bundle_fname, temp_dir = make_configuration_bundle( @event )
 
     short_fname = File.basename( config_bundle_fname )
     send_data(File.open(config_bundle_fname, 'r').read(), :filename => short_fname,
               :type => "application/octet-stream")
+
+    @event.update_attribute(:status, :downloaded)
     cleanup( temp_dir )
   end
 
