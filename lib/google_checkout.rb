@@ -1,7 +1,3 @@
-require 'rubygems'
-require "google4r/checkout"
-require "time"
-
 def initiate_event_purchase(event, confirmation_url)
   # Use your own merchant ID and Key, set use_sandbox to false for production
   configuration = F2N[:google_merchant_info]
@@ -15,7 +11,7 @@ def initiate_event_purchase(event, confirmation_url)
   checkout_command.shopping_cart.create_item do |item|
     item.name = "Face2Name Event: #{event.name}"
     item.description = "From #{event.not_before.strftime('%b %d %Y')} to #{event.not_after.strftime('%b %d %Y')}"
-    item.unit_price = Money.us_dollar(1000)
+    item.unit_price = Money.us_dollar(100000)
     item.quantity = 1
 
     item.create_digital_content do |digital_content|
@@ -25,7 +21,14 @@ def initiate_event_purchase(event, confirmation_url)
     end
   end
 
-  checkout_command.send_to_google_checkout
+  response = checkout_command.send_to_google_checkout
+
+  event.purchase_serial_number = response.serial_number
+  event.purchase_status = 'UNPAID'
+  event.save!
+
+
+  return response
 end
 
 def check_event_purchase_status(most_recent_notification_time)
@@ -38,14 +41,3 @@ def check_event_purchase_status(most_recent_notification_time)
   csv = history_command.send_to_google_checkout
 end
 
-class TaxTableFactory
-  def effective_tax_tables_at(time)
-    tax_free_table = Google4R::Checkout::TaxTable.new(false)
-    tax_free_table.name = "default table"
-    tax_free_table.create_rule do |rule|
-      rule.area = Google4R::Checkout::UsCountryArea.new(Google4R::Checkout::UsCountryArea::ALL)
-      rule.rate = 0.0
-    end
-    [ tax_free_table ]
-  end
-end

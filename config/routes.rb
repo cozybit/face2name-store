@@ -7,7 +7,7 @@ F2nstore::Application.routes.draw do |map|
   resources :users
   resources :events do
     member do
-      get :configuration
+      get :configuration, :purchase, :confirm
     end
   end
 

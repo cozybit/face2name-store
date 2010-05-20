@@ -16,5 +16,8 @@
       = @event.admin_password
 
   .actions.clearfix
-    %a.btn.tk-bree{:href => url_for(configuration_event_path(@event))} Download Configuration
+    - if @event.purchased?
+      %a.btn.tk-bree{:href => url_for(configuration_event_path(@event))} Download Configuration
+    - else
+      %a.btn.tk-bree{:href => url_for(purchase_event_path(@event))} Purchase Event
     %a.btn.tk-bree{:href => url_for(edit_event_path(@event))} Edit

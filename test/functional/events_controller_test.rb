@@ -114,9 +114,41 @@ class EventsControllerTest < ActionController::TestCase
                               :admin_password=>'ALLUPPPERCASE'}
     assert_redirected_to event_path( assigns( :event ))
 
-
     get :configuration, :id => @event.to_param
     assert_match %r{application\/octet-stream}, @response.headers["Content-Type"]
 
+  end
+
+  test "should redirect to payment gateway url" do
+    self.signin_as_testuser
+    assert @event.purchase_status == nil
+
+    get :purchase, :id => @event.to_param
+
+    @event.reload
+    assert @event.purchase_status == 'UNPAID'
+
+    assert_response 302
+    assert response.location.match(/google\.com/)
+  end
+
+  test 'should fail to confirm event purchase' do
+    self.signin_as_testuser
+
+    get :confirm, :id => @event.to_param, :key => @event.download_key + 'foo'
+
+    assert @event.purchase_status != 'PAID'
+
+    assert_response 403
+  end
+
+  test 'should confirm event purchase' do
+    self.signin_as_testuser
+    
+    get :confirm, :id => @event.to_param, :key => @event.download_key
+
+    @event.reload
+    assert_redirected_to event_path(assigns( :event ))
+    assert_equal 'PAID', @event.purchase_status
   end
 end

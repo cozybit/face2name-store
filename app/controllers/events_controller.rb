@@ -1,4 +1,5 @@
 require 'create_config_bundle'
+require 'google_checkout'
 
 class EventsController < ApplicationController
   before_filter :authenticate_user!
@@ -95,5 +96,25 @@ class EventsController < ApplicationController
     send_data(File.open(config_bundle_fname, 'r').read(), :filename => short_fname,
               :type => "application/octet-stream")
     cleanup( temp_dir )
+  end
+
+  # GET /event/1/purchase
+  def purchase
+    @event = Event.find(params[:id])
+
+    response = initiate_event_purchase(@event, url_for(:action => :confirm, :key => @event.download_key))
+
+    redirect_to response.redirect_url
+  end
+
+  def confirm
+    @event = Event.find(params[:id])
+
+    if (@event.download_key == params[:key])
+      @event.update_attribute(:purchase_status, 'PAID')
+      redirect_to(@event, :notice => 'Thank you for your purchase.')
+    else
+      redirect_to '/403.html', :status => 403
+    end
   end
 end
