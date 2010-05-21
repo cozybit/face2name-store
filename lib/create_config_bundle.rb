@@ -243,9 +243,9 @@ def openssl_certificates( temp_dir, keys_dir, cert_serial_num, event_name, not_b
 #      "-set_serial #{cert_serial_num} 2>&1"
 
   File.open(File.join(temp_ca_dir, 'serial'), 'w') do |f|
-    f.write( "%x" % cert_serial_num ) # Serial file is in hex format
+    f.write( "%02x" % cert_serial_num ) # Serial file is in hex format
   end
-
+  
   cmd = "openssl ca -batch -in \"#{f2n_server_csr}\" -cert \"#{ssl_ca_cert}\" -keyfile \"#{ssl_ca_key}\" " +
         "-out \"#{ssl_server_cert}\" -extensions \"usr_cert\" -config \"#{openssl_config}\" 2>&1"
 
