@@ -13,7 +13,14 @@ admin = User.create(
     :password => 'simple',
     :password_confirmation => 'simple'
 )
-
 admin.role = 'admin'
 # admin.confirmed_at = DateTime.now()
 admin.save!
+
+# This user can create configurations without paying.
+unlimited = User.create(
+    :email => 'unlimited@test.com',
+    :password => 'simple',
+    :password_confirmation => 'simple',
+    :is_unlimited => true
+)

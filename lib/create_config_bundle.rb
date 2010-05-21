@@ -322,9 +322,9 @@ def make_configuration_bundle( event )
     f.write(make_users_xml(test_users ))
   end
 
-  # !!! Make server passphrase file (Yikes, is this right?)
+  # Take out when Gonzalo changes importer. [ww may 2010]
   f = File.new( File.join( tarball_source, 'keys', 'f2n_server.pass' ), 'wb' )
-  f.write( "I never forget a face" )
+  f.write( "" )
   f.close()
 
   # tar/gzip it.
