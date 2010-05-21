@@ -18,7 +18,7 @@ RANDFILE                = $ENV::HOME/.rnd
 default_ca      = CA_default
 
 [ CA_default ]
-dir             = .
+dir             = @TMP_DIR@
 # unsed at present, and my limited certs can be kept in current dir
 #certs          = $dir/certs
 new_certs_dir   = $dir/newcerts
@@ -42,12 +42,15 @@ unique_subject  = no
 name_opt        = ca_default
 cert_opt        = ca_default
 
-default_crl_days= 30
-default_days    = 730
+# default_crl_days= 30
+# default_days    = 730
 # if need to be compatible with older software, use weaker md5
 default_md      = sha1
 # MSIE may need following set to yes?
 preserve        = no
+
+default_startdate = @START_DATE@
+default_enddate   = @END_DATE@
 
 # A few difference way of specifying how similar the request should look
 # For type CA, the listed attributes must be the same, and the optional

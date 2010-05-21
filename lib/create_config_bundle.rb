@@ -183,6 +183,7 @@ def openssl_certificates( temp_dir, keys_dir, cert_serial_num, event_name, not_b
   ssl_server_cert = File.join(keys_dir, "f2n_server.cert")
   ssl_server_key  = File.join(keys_dir, "f2n_server.key")
   f2n_server_csr  = File.join(keys_dir, "f2n_server.csr")
+
   # temporary files:
   f2n_server_csr  = File.join(temp_dir, "f2n_server.csr")
   openssl_config  = File.join(temp_dir, "openssl.cnf")
@@ -208,11 +209,20 @@ def openssl_certificates( temp_dir, keys_dir, cert_serial_num, event_name, not_b
   # compute_subject_alt_name
   subject_alt_name = Digest::SHA1.hexdigest( event_name )+'.sha1.f2n-server-cert.face2name.local'
 
+  temp_ca_dir = File.join( temp_dir, 'tmpCA' )
+  [ temp_ca_dir, File.join( temp_ca_dir, 'newcerts'), File.join( temp_ca_dir, 'ca')].each do |dirname|
+    FileUtils.mkdir( dirname )
+  end
+  FileUtils.touch( File.join( temp_ca_dir, 'index' ) )
+
   # modify ssl config template
   config = File.open( ssl_config_template, 'r' ).read()
+  config.gsub!( '@TMP_DIR@', temp_ca_dir )
   config.gsub!( '@SUBJECT_ALT_ENABLED@', "" )
   config.gsub!( '@SUBJECT_ALT_NAME@', subject_alt_name )
   config.gsub!( '@CN@', event_name )
+  config.gsub!( '@START_DATE@', not_before.strftime('%y%m%d000000Z') )
+  config.gsub!( '@END_DATE@', not_after.strftime('%y%m%d000000Z') )
   f = File.new( openssl_config, 'w' )
   f.write( config )
   f.close()
@@ -224,11 +234,20 @@ def openssl_certificates( temp_dir, keys_dir, cert_serial_num, event_name, not_b
     "Server CSR generation failed" )
 
   # Sign server cert
-  days = ((not_after - Time.now()) / (60*60*24)).ceil # Convert seconds to days
-  cmd = "openssl x509 -req -extfile \"#{openssl_config}\" -extensions \"usr_cert\" "+
-      "-in \"#{f2n_server_csr}\" -CA \"#{ssl_ca_cert}\" -CAkey \"#{ssl_ca_key}\" "+
-      "-out \"#{ssl_server_cert}\" -days #{days} -CAcreateserial "+
-      "-set_serial #{cert_serial_num} 2>&1"
+#  days = ((not_after - Time.now()) / (60*60*24)).ceil # Convert seconds to days
+#  cmd = "openssl x509 -req -extfile \"#{openssl_config}\" -extensions \"usr_cert\" "+
+#      "-in \"#{f2n_server_csr}\" -CA \"#{ssl_ca_cert}\" -CAkey \"#{ssl_ca_key}\" "+
+#      "-out \"#{ssl_server_cert}\" -days #{days} -CAcreateserial "+
+#      "-set_serial #{cert_serial_num} 2>&1"
+
+#      "-set_serial #{cert_serial_num} 2>&1"
+
+  File.open(File.join(temp_ca_dir, 'serial'), 'w') do |f|
+    f.write( "%x" % cert_serial_num ) # Serial file is in hex format
+  end
+
+  cmd = "openssl ca -batch -in \"#{f2n_server_csr}\" -cert \"#{ssl_ca_cert}\" -keyfile \"#{ssl_ca_key}\" " +
+        "-out \"#{ssl_server_cert}\" -extensions \"usr_cert\" -config \"#{openssl_config}\" 2>&1"
 
   run_cmd( cmd, "Certificate signing failed")
 
@@ -284,10 +303,10 @@ def make_configuration_bundle( event )
   tarball_source = File.join( tempdir, 'to_tar_gz' )
   FileUtils.mkdir_p( tarball_source )
   raise "Assert: Unable to make temporary folder at '"+tarball_source+"'" unless File.directory? tarball_source
-  
 
+  # Add a 5 day buffer on either side of the certificate's window
   openssl_certificates( tempdir, File.join( tarball_source, 'keys' ),
-    event.id, event.name, event.not_before, event.not_after )
+    event.id, event.name, event.not_before - 5.days, event.not_after + 5.days)
 
   # Make admin password File
   f = File.new( File.join( tarball_source, 'admin_password.txt' ), 'wb' )
