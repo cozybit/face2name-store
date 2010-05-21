@@ -10,6 +10,14 @@ class EventTest < ActiveSupport::TestCase
     assert !event.valid?
   end
 
+  test "event duration cannot be greater than 21 days" do
+    today = Date.today()
+    event = Event.new(:not_before => today, :not_after => today + 21, :admin_password => 'simple', :name => 'foo' )
+    assert event.valid?
+    event = Event.new(:not_before => today, :not_after => today + 22, :admin_password => 'simple', :name => 'foo' )
+    assert !event.valid?
+  end
+
   test "event initialization populates download key" do
     event = Event.create(:not_before => Date.today(), :not_after => Date.today() + 3, :admin_password => 'simple', :name => 'foo')
 
