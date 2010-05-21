@@ -219,7 +219,7 @@ th {
 /* The Window's CSS z-index value is respected (takes priority). If none is supplied,
 	the Window's z-index value will be set to 3000 by default (via jqModal.js). */
 
-.jqmWindow {
+.modal {
     display: none;
 
     position: fixed;
@@ -232,7 +232,11 @@ th {
     background-color: #EEE;
     color: #333;
     border: 1px solid black;
-    padding: 12px;
+    padding: 20px;
+}
+
+.modal h1.title {
+  margin-top: 5px;
 }
 
 .jqmOverlay { background-color: #000; }
@@ -246,7 +250,7 @@ th {
 /* Fixed posistioning emulation for IE6
      Star selector used to hide definition from browsers other than IE6
      For valid CSS, use a conditional include instead */
-* html .jqmWindow {
+* html .modal {
      position: absolute;
      top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(17 * (document.documentElement.offsetHeight || document.body.clientHeight) / 100) + 'px');
 }

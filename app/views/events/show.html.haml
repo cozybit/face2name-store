@@ -16,11 +16,41 @@
       = @event.admin_password
     %li
       %b Status
-      = display_status(@event)
+      %span.status
+        = display_event_status(@event)
 
   .actions.clearfix
-    - if @event.paid?
-      %a.btn.tk-bree{:href => url_for(configuration_event_path(@event))} Download Configuration
+    - if @event.downloadable?
+      %a.btn.tk-bree.download_link{:href => url_for(configuration_event_path(@event))} Download Configuration
     - else
       %a.btn.tk-bree{:href => url_for(purchase_event_path(@event))} Purchase Event
-    %a.btn.tk-bree{:href => url_for(edit_event_path(@event))} Edit
+    - if !@event.downloaded?
+      %a.btn.tk-bree.edit_link{:href => url_for(edit_event_path(@event))} Edit
+
+  -if !@event.downloaded?
+    .modal.confirm_modal
+      %h1.title.tk-bree Lock Event Details and Download
+      %p
+        Once you have downloaded the configuration file your event details will be locked; you will no longer be able to edit your event. Please make sure that your event's name is accurate and that the start and end dates are correct.
+
+      .actions
+        %a.btn.tk-bree.confirm_download_link{:href => url_for(configuration_event_path(@event))} Yes - Download
+        %a.btn.tk-bree.modal_close{:href => '/'} Cancel
+    
+    :javascript
+      $(document).ready(function() {
+        $('.confirm_modal').jqm({ modal: true, closeClass: 'modal_close'});
+
+        $('a.download_link').click(function() {
+          $('.confirm_modal').jqm({ modal: true, closeClass: 'modal_close'}).jqmShow();
+          return false;
+        });
+
+        $('a.confirm_download_link').click(function() {
+          $('a.download_link').unbind('click');
+          $('.confirm_modal').jqmHide();
+          $('a.edit_link').hide();
+          $('span.status').html('#{humanize_event_status(:downloaded)}');
+          F2N.yellow_flash($('span.status'), '#FFFFFF');
+        });
+      });

@@ -4,14 +4,18 @@
 //$(function(){ $("select").uniform(); });
 //$("select, input:checkbox, input:radio, input:file").uniform();
 
-$(document).ready(function() {
-  var yellow_flash = function($flasher, start_color) {
+var F2N = {
+  yellow_flash: function($flasher, start_color) {
     $flasher.css('background-color', '#FFFFC7');
 
     setTimeout(function() {
       $flasher.animate({ backgroundColor: start_color }, 1000);
     }, 500);
-  };
+  }
+}
+
+
+$(document).ready(function() {
 
   $('.user_field_toggle').change(function() {
     var $checkbox = $(this);
@@ -25,11 +29,10 @@ $(document).ready(function() {
     $.ajax({ type: 'POST', url: $checkbox.attr('rel'), data: data, dataType: 'json',
       success: function(data, textStatus, XMLHttpRequest) {
         $td.removeClass('spinner');
-        yellow_flash($checkbox.parents('tr'), '#FFFFFF');
+        F2N.yellow_flash($checkbox.parents('tr'), '#FFFFFF');
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         $td.removeClass('spinner');
-        yellow_flash($checkbox.parent('tr'));
       }
     });
   });
