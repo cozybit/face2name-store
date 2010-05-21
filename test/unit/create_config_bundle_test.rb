@@ -20,16 +20,34 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     make_configuration_bundle( event )
   end
 
-  test "certificate data" do
+  test 'generated certificates are valid for 5 days before and after specified event dates' do
 
+    not_before = Time.utc(2010, 5, 10)
+    not_after = Time.utc(2010, 5, 15)
+
+    event = Event.create(:name => 'My Great Conference-'+(rand(92-65)+65).chr,
+                         :not_before => not_before,
+                         :not_after => not_after,
+                         :admin_password => 'simple')
+    event.id = rand(100)+1
+
+    ignored, temp_dir = make_configuration_bundle( event )
+    cert_name = Dir.glob(File.join(temp_dir, '**', 'f2n_server.cert')).first
+
+    c = OpenSSL::X509::Certificate.new(File.read(cert_name))
+    assert_equal( not_after + 5.days, c.not_after )
+    assert_equal( not_before - 5.days, c.not_before )
+  end
+
+  test "certificate data" do
     # create certificate
     temp_dir = make_temp_dir()
-    start_time = Time.utc(2010, rand(12)+1, rand(28)+1 )
+    expect_start_time = Time.utc(2010, rand(12)+1, rand(28)+1 )
     event_name = 'Test Certificate Data'
-    expect_end_time = start_time + (rand(21)+1) * 60*60*24
+    expect_end_time = expect_start_time + (rand(21)+1) * 60*60*24
     expect_serial_num = rand(100)+1
     cert_name = openssl_certificates( temp_dir, temp_dir, expect_serial_num, event_name,
-       start_time, expect_end_time )
+       expect_start_time, expect_end_time )
 
     # Check end-date
     #    e.g.: "notBefore=May 11 21:24:46 2010 GMT"
@@ -41,11 +59,15 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     # Check again with Ruby lib
     c = OpenSSL::X509::Certificate.new(File.read(cert_name))
     
+    assert_equal( expect_start_time.year, c.not_before.year )
+    assert_equal( expect_start_time.month, c.not_before.month )
+    assert_equal( expect_start_time.day, c.not_before.day )
+    
     assert_equal( expect_end_time.year, c.not_after.year )
     assert_equal( expect_end_time.month, c.not_after.month )
     assert_equal( expect_end_time.day, c.not_after.day )
     assert_equal( expect_serial_num, c.serial )
-    assert_match( /^\/CN=#{event_name}\/.+/, c.subject.to_s )
+    assert_match( /\/CN=#{event_name}\/.+/, c.subject.to_s )
   end
 
   test "encrypt file with AES" do
