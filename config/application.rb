@@ -58,6 +58,9 @@ F2N = {
   # Configure keys used for encrypting Event bundles
   :encryption_key => Rails.root.join('lib', 'crypto', 'aes.key'),
 
+  # Should we delete temporary files after creating a configuration bundle?
+  :cleanup_configs => true,
+
   # Google Checkout merchant information
   :google_merchant_info => {
     :merchant_id => '505737408619416',

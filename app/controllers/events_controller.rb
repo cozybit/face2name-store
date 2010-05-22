@@ -106,7 +106,9 @@ class EventsController < ApplicationController
               :type => "application/octet-stream")
 
     @event.update_attribute(:status, :downloaded)
-    cleanup( temp_dir )
+    if F2N[:cleanup_configs]
+      cleanup( temp_dir )
+    end
   end
 
   # GET /event/1/purchase
