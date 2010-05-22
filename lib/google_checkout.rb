@@ -1,4 +1,3 @@
-require "google4r/checkout"
 
 def initiate_event_purchase(event, confirmation_url)
   # Use your own merchant ID and Key, set use_sandbox to false for production
