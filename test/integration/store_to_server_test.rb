@@ -56,22 +56,22 @@ class StoreToServerTest < Test::Unit::TestCase
     login_page = browser.get(STORE_URL)
     assert login_page != nil
     welcome_page = login_page.form_with( :action => "/users/sign_in") do |f|
-      assert f != nil
+      assert f != nil, 'Could not find Login form.'
       puts "form=#{f}"
-      f["user[email]"] = "admin@test.com"
+      f["user[email]"] = "unlimited@test.com"
       f["user[password]"] = "simple"
     end.click_button
 
     # On welcome page, click on New Event
     new_event_link = welcome_page.link_with(:href => '/events/new')
-    assert nil != new_event_link
+    assert nil != new_event_link, 'Could not find new event link.'
     new_event_page = new_event_link.click
     assert nil != new_event_page
 
     # Fill in New Event form
-    timestamp = Time.now().strftime('%b%d-%H:%M')
+    timestamp = Time.now().strftime('%b%d %H%M')
     not_before = Date.today() + rand(90)+1
-    not_after = not_before + rand(21)+1
+    not_after = not_before + rand(9)+1
     the_event_page = new_event_page.form_with( :action=>"/events") do |f|
       assert nil != f
       f["event[name]"]="Automated Integration Cruise "+timestamp
@@ -89,8 +89,12 @@ class StoreToServerTest < Test::Unit::TestCase
     # Download the configuration file
     assert the_event_page != nil
     download_configuration_btn = the_event_page.link_with(:text=>"Download Configuration")
+    assert download_configuration_btn != nil, 'Could not find Download Configuration button. Is the user an unlimited user? Remember not the test db but the currently running store.'
     config_file = download_configuration_btn.click
+#    yes_download_btn = confirmation_dialog.button_with(:text=>"Yes - Download")
+#    config_file = yes_download_btn.click
     assert config_file.body.length > 0
+    assert config_file.response['content-type'] == 'application/octet-stream'
     config_tmp_filename = File.join( Dir.tmpdir, config_file.filename )
     File.open(config_tmp_filename, 'w') do |file|
       file.write(config_file.body)
