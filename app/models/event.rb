@@ -11,6 +11,7 @@ class Event < ActiveRecord::Base
   serialize :status
 
   belongs_to :user
+  has_many :attendees
 
   validates :not_before, :presence => true
   validates :not_after, :presence => true

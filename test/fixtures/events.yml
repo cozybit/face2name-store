@@ -1,3 +1,5 @@
+
+
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
@@ -50,4 +52,14 @@ downloaded:
   admin_password: simple
   download_key: BBCDEFGHIJKLMNOP
   status: :downloaded
+
+attended:
+  name: "Cruise Attended"
+  not_before: 2011-05-05
+  not_after: 2011-05-07
+  user: testuser
+  admin_password: simple
+  download_key: BBCDEFGHIJKLMNOP
+  status: :downloaded
+
 

@@ -9,6 +9,7 @@ F2nstore::Application.routes.draw do |map|
     member do
       get :configuration, :purchase, :confirm
     end
+    resources :attendees
   end
 
   get "home/index"

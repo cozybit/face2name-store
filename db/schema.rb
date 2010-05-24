@@ -9,7 +9,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100520190743) do
+ActiveRecord::Schema.define(:version => 20100522003043) do
+
+  create_table "attendees", :force => true do |t|
+    t.string "email"
+    t.string "name"
+    t.string "activation_code"
+  end
+
+  add_index "attendees", ["name", "email"], :name => "index_attendees_on_name_and_email", :unique => true
 
   create_table "events", :force => true do |t|
     t.integer  "user_id"
