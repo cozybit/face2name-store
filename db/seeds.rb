@@ -22,5 +22,6 @@ unlimited = User.create(
     :email => 'unlimited@test.com',
     :password => 'simple',
     :password_confirmation => 'simple',
-    :is_unlimited => true
 )
+unlimited.is_unlimited = true # not mass-assignable.
+unlimited.save!
