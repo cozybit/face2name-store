@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class AttendeesControllerTest < ActionController::TestCase
+  include Devise::TestHelpers
+
   def setup
     @event = events(:attended)  
   end
@@ -11,6 +13,16 @@ class AttendeesControllerTest < ActionController::TestCase
   end
 
   test 'should list attendees for event' do
-    get :event_id =
+    get :index, :event_id => @event.to_param
+
+    assert_response :success
+    assert_not_nil assigns(:attendees)
+  end
+
+  test 'should show new attendee form' do
+    get :new, :event_id => @event.to_param
+
+    assert_response :success
+    assert assigns(:event)
   end
 end

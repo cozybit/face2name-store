@@ -12,9 +12,10 @@
 ActiveRecord::Schema.define(:version => 20100522003043) do
 
   create_table "attendees", :force => true do |t|
-    t.string "email"
-    t.string "name"
-    t.string "activation_code"
+    t.integer "event_id"
+    t.string  "email"
+    t.string  "name"
+    t.string  "activation_code"
   end
 
   add_index "attendees", ["name", "email"], :name => "index_attendees_on_name_and_email", :unique => true

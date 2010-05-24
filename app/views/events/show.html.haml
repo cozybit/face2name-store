@@ -19,6 +19,12 @@
       %span.status
         = display_event_status(@event)
 
+  - if @event.attendees.any?
+    %a{:href => url_for(:controller => :attendees, :event_id => @event.to_param)} View Attendees
+    (#{@event.attendees.length} registered)
+  - else
+    No attendees are yet registered
+
   .actions.clearfix
     - if @event.downloadable?
       %a.btn.tk-bree.download_link{:href => url_for(configuration_event_path(@event))} Download Configuration

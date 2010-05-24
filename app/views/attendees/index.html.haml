@@ -1,0 +1,25 @@
+.grid_8
+  %h1.title.tk-bree Listing Attendees for #{@event.name}
+
+  %table
+    %tr
+      %th.left ID
+      %th.left Name
+      %th.left Email
+      %th.right Activation Code
+
+    - @attendees.each do |attendee|
+      %tr
+        %td
+          = attendee.id
+        %td
+          = attendee.name
+        %td
+          = attendee.email
+        %td.right
+          = attendee.activation_code
+
+  %p
+    %a.btn.tk-bree{:href => (url_for new_event_attendee_path(@event))}
+      %span
+        Register New Attendee

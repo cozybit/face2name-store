@@ -1,6 +1,7 @@
 class CreateAttendeesTable < ActiveRecord::Migration
   def self.up
     create_table(:attendees) do |t|
+      t.belongs_to :event
       t.string :email
       t.string :name
       t.string :activation_code
