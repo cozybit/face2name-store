@@ -4,7 +4,7 @@ class CreateAttendeesTable < ActiveRecord::Migration
       t.belongs_to :event
       t.string :email
       t.string :name
-      t.string :activation_code
+      t.string :passcode
     end
 
     add_index :attendees, [:name, :email], :unique => true

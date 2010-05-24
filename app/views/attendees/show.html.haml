@@ -1,0 +1,16 @@
+.grid_8
+  %h1.title.tk-bree Event Details
+
+  %ul
+    %li
+      %b Name:
+      = @attendee.name
+    %li
+      %b Email:
+      = @attendee.email
+    %li
+      %b Passcode:
+      = @attendee.passcode
+
+  .actions.clearfix
+    %a.btn.tk-bree.download_link{:href => ''} unused

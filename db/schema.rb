@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(:version => 20100522003043) do
     t.integer "event_id"
     t.string  "email"
     t.string  "name"
-    t.string  "activation_code"
+    t.string  "passcode"
   end
 
   add_index "attendees", ["name", "email"], :name => "index_attendees_on_name_and_email", :unique => true

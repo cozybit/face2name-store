@@ -26,8 +26,7 @@ def initiate_event_purchase(event, confirmation_url)
 
   event.purchase_serial_number = response.serial_number
   event.status = 'UNPAID'
-  event.save!
-
+  event.save
 
   return response
 end

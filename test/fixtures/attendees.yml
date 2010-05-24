@@ -2,10 +2,10 @@ loretta:
   event: attended
   name: Loretta Attenda
   email: loretta@attendee.com
-  activation_code: ABCDEF
+  passcode: ABCDEF
 
 max:
   event: attended
   name: Max Attax
   email: max@attendee.com
-  activation_code: ABCDEF
+  passcode: ABCDEF

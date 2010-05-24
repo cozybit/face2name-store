@@ -15,7 +15,7 @@ admin = User.create(
 )
 admin.role = 'admin'
 # admin.confirmed_at = DateTime.now()
-admin.save!
+admin.save
 
 # This user can create configurations without paying.
 unlimited = User.create(
@@ -24,4 +24,4 @@ unlimited = User.create(
     :password_confirmation => 'simple',
 )
 unlimited.is_unlimited = true # not mass-assignable.
-unlimited.save!
+unlimited.save

@@ -48,8 +48,7 @@ class EventsController < ApplicationController
   # POST /events
   # POST /events.xml
   def create
-    @event = Event.new(params[:event].update(:user => current_user()))
-
+    @event = current_user.events.build(params[:event])
     @event.status = :paid if current_user.is_unlimited?
     
     respond_to do |format|

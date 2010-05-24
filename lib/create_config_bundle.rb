@@ -32,7 +32,7 @@ end
 
 # Generate a random activation code, appended with a checksum.
 # See (subversion)/face2name/tests/activation/gen_activation_code.py
-def activation_code()
+def make_passcode()
   act_code = ''
   valid_set_ascii = ("A".."Z").to_a
 
@@ -69,7 +69,7 @@ def make_users_xml( attendees )
     username = Digest::SHA1.hexdigest( email )
 
     
-    act_code = activation_code()
+    act_code = make_passcode()
     photo_u64_data = "" # Read photo data
 
     result_xml += "  <User>
