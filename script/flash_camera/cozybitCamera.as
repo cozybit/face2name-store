@@ -37,6 +37,7 @@
         private var urlRequest: URLRequest;
         private var responseData: String;
 		private var strUUID: String;
+		private var textFmt: TextFormat;
 		
 		private var cameraSettingsBtn: Button;
         
@@ -67,19 +68,22 @@
 			
 			spinny.visible = false; // spinning wait graphic on stage
 			infoText.text = "";
+
+			textFmt = new TextFormat();
+			textFmt.color = 0x444444;
+			textFmt.font = "Arial";
+			textFmt.size = "12";
 			
+			btnTake.setStyle("textFormat", textFmt);
 			btnTake.label = "Take Picture";	
 			btnTake.addEventListener(MouseEvent.CLICK, btnTakeClickHandler);
 
+			btnNext.setStyle("textFormat", textFmt);
 			btnNext.label = "Next >>";
 			btnNext.visible = false;
 			btnNext.addEventListener(MouseEvent.CLICK, btnNextClickHandler);			
 			
-			var lblFormat:TextFormat = new TextFormat();
-			lblFormat.color = 0x444444;
-			lblFormat.font = "Arial";
-			lblFormat.size = "13";
-			infoText.setStyle("textFormat", lblFormat);
+			infoText.setStyle("textFormat", textFmt);
 			infoText.text = "";
 
             startCamera();
@@ -92,9 +96,12 @@
             if (visible && cameraSettingsBtn==null){
                 // Create first time.
                 cameraSettingsBtn = new Button();
+    			cameraSettingsBtn.setStyle("textFormat", textFmt);
                 cameraSettingsBtn.label = "Check Camera";
                 cameraSettingsBtn.x = btnTake.x;
                 cameraSettingsBtn.y = btnTake.y;
+                cameraSettingsBtn.width = btnTake.width;
+                cameraSettingsBtn.height = btnTake.height;
                 cameraSettingsBtn.addEventListener( MouseEvent.CLICK, on_cameraSettingsBtn_click );
                 cameraSettingsBtn.visible = true;
                 addChild( cameraSettingsBtn );
@@ -124,8 +131,7 @@
 
             } else {
 				checkCameraBtn( false );
-
-//                camera.addEventListener(ActivityEvent.ACTIVITY, activityHandler);
+                infoWelcome();
 
 				camera.setMode( box.width, box.height, 24);
 				camera.setQuality(0, 100);
@@ -135,26 +141,32 @@
 				video.smoothing = true;
 				video.attachCamera(camera);
 
-                video.x = (box.width-camera.width)/2
-                video.y = (box.height-camera.height)/2
-                box.addChild( video );
+                video.x = box.x+(box.width-camera.width)/2
+                video.y = box.y+(box.height-camera.height)/2
+                addChild( video );
             }
 		}
 
         private function on_cameraSettingsBtn_click( evt: MouseEvent ){
             startCamera();
         }
-
-//         private function activityHandler(event:ActivityEvent):void {
-//             trace("activityHandler: " + event);
-//         }
-		
         
+        private function infoWelcome(){
+            var firstName: String = getFirstName()
+            if (firstName == null){
+                firstName = '';
+            } else {
+                firstName = ' '+firstName;
+            }
+            infoText.text = "Welcome" + firstName + ", please take your picture.";
+        }
+        
+       
 		private function loadExternalData() {
 			if (ExternalInterface.available) {
                 try {
                     if (checkJavaScriptReady()) {
-                        infoText.text = "Welcome " + getFirstName() + ", please take your picture.";
+                        infoWelcome();
                     } else {
                         // javascript not ready, keep trying
                         var readyTimer:Timer = new Timer(100, 0);
@@ -172,7 +184,8 @@
         private function timerHandler(event:TimerEvent):void {
             var isReady:Boolean = checkJavaScriptReady();
             if (isReady) {
-               	infoText.text = "Welcome " + getFirstName() + ", please take your picture.";;
+                infoWelcome();
+//               	infoText.text = "Welcome " + getFirstName() + ", please take your picture.";;
             	Timer(event.target).stop();
             }
         }
@@ -211,9 +224,9 @@
     
 				// Show on the screen
                 stillImage = new Bitmap(gBitmapData);
-                stillImage.x = (box.width-camera.width)/2;
-                stillImage.y = (box.height-camera.height)/2;
-                box.addChild(stillImage);
+                stillImage.x = box.x+(box.width-camera.width)/2;
+                stillImage.y = box.y+(box.height-camera.height)/2;
+                addChild(stillImage);
                 video.visible = false;
 				
 				// here we are grabbing the video screen, getting the bitMapData and creating
@@ -225,8 +238,8 @@
  				gBitmapToSend = new Bitmap(gBitmapData);
 			} else {  // Retake
 			    // Remove our still photo
-				if (box.contains(stillImage)){
-					box.removeChild(stillImage);
+				if (contains(stillImage)){
+					removeChild(stillImage);
 					stillImage = null;
 					gBitmapData.dispose();
 				    gBitmapData = null;	
