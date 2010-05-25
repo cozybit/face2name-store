@@ -1,0 +1,57 @@
+:javascript
+  $(document).ready(function() {
+  $("input:file").uniform()
+  });
+
+:css
+  #attendee_photo_form .actions,
+  #attendee_photo_form .uploader {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+      
+
+.grid_8
+  %h1.title.tk-bree Upload Existing Photo
+  %p
+    If you have an existing photo you'd like to you choose it from your filesystem and then upload it
+  .clearfix#attendee_photo_form
+    = form_for([@event, @attendee], :url => { :action => "upload_photo" }, :html => { :method => :post, :multipart => true }) do |f|
+      - if @attendee.errors.any?
+        #errorExplanation
+          %h2
+            = pluralize(@attendee.errors.count, "error")
+            prohibited this attendee from being saved:
+          %ul
+            - @attendee.errors.full_messages.each do |msg|
+              %li
+                = msg
+
+      .field.photo.clearfix
+        = f.file_field :photo
+      .actions.clearfix
+        = f.submit "Upload >", :class => 'btn tk-bree'
+        = f.submit "Take Picture", :class => 'btn tk-bree'
+        = f.submit "Retake Picture", :class => 'btn tk-bree'
+
+  %h1.title.tk-bree Or Use Camera
+  :plain
+    <object align="middle" id="cozybitCamera" height="500" width="500"
+      codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0"
+      classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000">
+      <param value="sameDomain" name="allowScriptAccess" />
+      <param value="false" name="allowFullScreen" />
+      <param value="/cozybitCamera.swf" name="movie" />
+      <param value="high" name="quality" />
+      <param value="#ffffff" name="bgcolor" />
+      <embed pluginspage="http://www.adobe.com/go/getflashplayer" type="application/x-shockwave-flash"
+        allowFullScreen="false" allowScriptAccess="sameDomain"
+        align="middle"
+        name="cozybitCamera"
+        height="500" width="500"
+        bgcolor="#ffffff"
+        quality="high"
+        src="/cozybitCamera.swf"
+      />
+    </object>
+

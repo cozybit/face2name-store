@@ -3,7 +3,7 @@ require 'create_config_bundle'
 class Attendee < ActiveRecord::Base
   belongs_to :event
 
-  has_attached_file :photo, { :styles => { :thumb => "100x100>" }}.merge(F2N[:paperclip_info])
+  has_attached_file :photo, { :styles => { :thumb => "200x200#" }}.merge(F2N[:paperclip_info])
 
   validates :name, :presence => true, :length => { :within => 1..63 }
   validates_format_of :email,
