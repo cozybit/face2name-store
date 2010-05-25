@@ -12,7 +12,8 @@ F2nstore::Application.routes.draw do |map|
     resources :attendees do
       member do
         get :new_photo
-        post :upload_photo
+        # userservice is a hack for supporting photo upload from the existing flash capture swf.
+        post :upload_photo, :userservice
       end
     end
   end
