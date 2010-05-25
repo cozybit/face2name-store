@@ -11,6 +11,8 @@
     %li
       %b Passcode:
       = @attendee.passcode
-
+    %li
+      %b Photo:
+      = image_tag @attendee.photo.url(:thumb)
   .actions.clearfix
     %a.btn.tk-bree.download_link{:href => ''} unused

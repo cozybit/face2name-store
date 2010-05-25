@@ -25,8 +25,11 @@ F2nstore::Application.configure do
 
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
 
-  F2N.merge!({
-    # Should we delete temporary files after creating a configuration bundle?
-    :cleanup_configs => false
-  })
 end
+
+Paperclip.options[:command_path] = "/opt/local/bin"
+
+F2N.merge!({
+  # Should we delete temporary files after creating a configuration bundle?
+  :cleanup_configs => false
+})

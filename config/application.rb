@@ -8,6 +8,8 @@ Bundler.require(:default, Rails.env) if defined?(Bundler)
 
 module F2nstore
   class Application < Rails::Application
+
+    Paperclip::Railtie.insert
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -66,5 +68,12 @@ F2N = {
     :merchant_id => '505737408619416',
     :merchant_key => 'yyWPO3KjnNRI7JoL4pRZxw',
     :use_sandbox => true
+  },
+
+  :paperclip_info => {
+    :storage => :s3,
+    :s3_credentials => { :access_key_id => "1414VZ2X13XZGN9BPP02", :secret_access_key => "c1zKHGB+PLp1YUcdWg4OvpIo7sdjxZV7AkwATp7t" },
+    :path => "/:attachment/:id/:style.:extension",
+    :bucket => "face2name-store"
   }
 }

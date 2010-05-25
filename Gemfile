@@ -13,6 +13,9 @@ gem 'money'
 gem 'mocha'
 gem 'google4r-checkout'
 
+gem 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git', :branch => 'rails3'
+gem 'aws-s3'
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
