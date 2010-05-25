@@ -9,3 +9,9 @@ max:
   name: Max Attax
   email: max@attendee.com
   passcode: ABCDEF
+
+nophoto:
+  event: attended
+  name: Nophoto McFaceless
+  email: McFaceless@attendee.com
+  passcode: ABCDEF

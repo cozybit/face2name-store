@@ -33,6 +33,8 @@ F2nstore::Application.configure do
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
 end
 
+Paperclip.options[:command_path] = "/opt/local/bin"
+
 F2N.merge!({
   # Configure CA Certs used for signing Event Certs
   :ca_cert => Rails.root.join('test', 'resources', 'crypto', 'ca.cert'),
