@@ -39,5 +39,5 @@ class AttendeesControllerTest < ActionController::TestCase
     assert assigns(:event)
     assert assigns(:attendee)
   end
-
+  
 end
