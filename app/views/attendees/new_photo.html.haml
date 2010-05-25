@@ -1,21 +1,38 @@
+:javascript
+  $(document).ready(function() {
+  $("input:file").uniform()
+  });
+
+:css
+  #attendee_photo_form .actions,
+  #attendee_photo_form .uploader {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+      
+
 .grid_8
   %h1.title.tk-bree Upload Existing Photo
-  = form_for([@event, @attendee], :url => { :action => "upload_photo" }, :html => { :method => :post, :multipart => true }) do |f|
-    - if @attendee.errors.any?
-      #errorExplanation
-        %h2
-          = pluralize(@attendee.errors.count, "error")
-          prohibited this attendee from being saved:
-        %ul
-          - @attendee.errors.full_messages.each do |msg|
-            %li
-              = msg
+  %p
+    If you have an existing photo you'd like to you choose it from your filesystem and then upload it
+  .clearfix#attendee_photo_form
+    = form_for([@event, @attendee], :url => { :action => "upload_photo" }, :html => { :method => :post, :multipart => true }) do |f|
+      - if @attendee.errors.any?
+        #errorExplanation
+          %h2
+            = pluralize(@attendee.errors.count, "error")
+            prohibited this attendee from being saved:
+          %ul
+            - @attendee.errors.full_messages.each do |msg|
+              %li
+                = msg
 
-    .field
-      = f.label :photo
-      = f.file_field :photo
-    .actions.clearfix
-      = f.submit(:class => 'btn tk-bree')
+      .field.photo.clearfix
+        = f.file_field :photo
+      .actions.clearfix
+        = f.submit "Upload >", :class => 'btn tk-bree'
+        = f.submit "Take Picture", :class => 'btn tk-bree'
+        = f.submit "Retake Picture", :class => 'btn tk-bree'
 
   %h1.title.tk-bree Or Use Camera
   :plain

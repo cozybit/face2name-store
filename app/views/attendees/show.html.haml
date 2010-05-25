@@ -1,6 +1,7 @@
-.grid_8
-  %h1.title.tk-bree Event Details
-
+.grid_3
+  %h1.title.tk-bree Registration Details
+  #attendee_photo
+    = image_tag @attendee.photo.url(:thumb)
   %ul
     %li
       %b Name:
@@ -8,9 +9,14 @@
     %li
       %b Email:
       = @attendee.email
-    %li
-      %b Passcode:
-      = @attendee.passcode
-    %li
-      %b Photo:
-      = image_tag @attendee.photo.url(:thumb)
+.grid_5
+  %h1.title.tk-bree Further Instructions
+  %p
+    Thank you for registering for
+    %strong
+      #{@event.name}.
+    You registration passcode is:
+  %p
+    %ul.passcode
+      -@attendee.passcode.split('').each do |d|
+        %li= d
