@@ -71,7 +71,7 @@
 
 			textFmt = new TextFormat();
 			textFmt.color = 0x1A3C5E;
-			textFmt.font = "Verdana";
+			textFmt.font = "Arial";
 			textFmt.size = "12";
 			
 			btnTake.setStyle("textFormat", textFmt);
