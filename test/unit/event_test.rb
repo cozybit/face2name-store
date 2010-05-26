@@ -25,6 +25,13 @@ class EventTest < ActiveSupport::TestCase
     assert event.download_key.length == 16
   end
 
+  test "event initialization populates registration key" do
+    event = Event.create(:not_before => Date.today(), :not_after => Date.today() + 3, :admin_password => 'simple', :name => 'foo')
+
+    assert event.registration_key != nil
+    assert event.registration_key.length == 16
+  end
+
   test "Event should reject bad chars in name" do
     event_name = 'good chars only'
     event = Event.new( :name => event_name, :not_before => Date.today(), :not_after => Date.today() + 3, :admin_password => 'simple')

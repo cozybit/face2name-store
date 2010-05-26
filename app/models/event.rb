@@ -25,9 +25,17 @@ class Event < ActiveRecord::Base
   include ActiveModel::Validations
   validates_with EventValidator
 
-  before_create :set_download_key
+  before_create :set_download_key, :set_registration_key
 
   def set_download_key
+    self.download_key = generate_ascii_key
+  end
+
+  def set_registration_key
+    self.registration_key = generate_ascii_key
+  end
+
+  def generate_ascii_key
     the_key = ''
 
     valid_set_ascii = ("A".."Z").to_a
@@ -35,7 +43,7 @@ class Event < ActiveRecord::Base
       the_key << valid_set_ascii[ rand(valid_set_ascii.size-1) ]
     end
 
-    self.download_key = the_key
+    return the_key
   end
 
   def paid?

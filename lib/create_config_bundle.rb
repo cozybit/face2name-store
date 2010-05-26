@@ -1,18 +1,3 @@
-#!/usr/bin/ruby -w
-
-=begin
-  Create face2name configuration bundle.
-  Called from command line, but also used in f2n Store
-
-  by Winston Wolff of Carbon Five, for Cozy Bit Inc. May 2010
-
-  Specs for Configuration Bundle:
-     https://123.writeboard.com/c81a2c60a098b49d8
-     (subversion)/face2name\docs\notes\config_bundle\config_bundle_spec.txt
-     (subversion)/face2name\keys\config_bundles\how_to.txt
-
-=end
-
 require 'time'
 require 'date'
 require 'digest/sha2'

@@ -1,3 +1,8 @@
+%style
+  input.registration_url {
+  width: 600px;
+  }
+
 .grid_8
   %h1.title.tk-bree Event Details
 
@@ -19,11 +24,15 @@
       %span.status
         = display_event_status(@event)
 
-  - if @event.attendees.any?
-    %a{:href => url_for(:controller => :attendees, :event_id => @event.to_param)} View Attendees
-    (#{@event.attendees.length} registered)
-  - else
-    No attendees are yet registered
+  %p
+    This event is now available for online registration. The registration URL for this event is:
+    %input.registration_url{ :type => 'text', :value => registration_url(@event), :readonly => 'true'}
+    - if @event.attendees.any?
+      %a{:href => url_for(:controller => :attendees, :event_id => @event.to_param)} View Attendees
+      (#{@event.attendees.length} registered)
+    - else
+    %br
+      No attendees are yet registered
 
   .actions.clearfix
     - if @event.downloadable?
