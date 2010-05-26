@@ -5,6 +5,8 @@ require 'create_config_bundle'
 require 'openssl'
 require 'base64'
 require 'digest/sha2'
+require 'hpricot'
+require 'nokogiri'
 
 class CreateConfigBundleTest < ActiveSupport::TestCase
 
@@ -94,6 +96,65 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
 
     assert plaintext == unencrypted
   end
+
+#  <?xml version="1.0" encoding="UTF-8"?>
+#  <Openfire>
+#    <User>
+#      <Username>2618fa31d056c6bb01a38f7681c03250970dd77c</Username>
+#      <Password>KUKWNK</Password>
+#      <Email>winston@carbonfive.com</Email>
+#      <Name>Winston Wolff</Name>
+#      <CreationDate>1274897145000</CreationDate>
+#      <ModifiedDate>1274897145000</ModifiedDate>
+#      <Roster/>
+#      <vCard xmlns="vcard-temp">
+#          <VERSION>2.0</VERSION>
+#          <FN>Winston Wolff</FN>
+#          <PHOTO>
+#              <TYPE>JPG</TYPE>
+#              <BINVAL></BINVAL>
+#          </PHOTO>
+#      </vCard>
+#    </User>
+#    <User>
+#      <Username>9d6f1825fe8016a61946948c58817f874b1dd38a</Username>
+#      <Password>RLCYMB</Password>
+#      <Email>garreche@gmail.com</Email>
+#      <Name>Gonzalo Arreche</Name>
+#      <CreationDate>1274897145000</CreationDate>
+#      <ModifiedDate>1274897145000</ModifiedDate>
+#      <Roster/>
+#      <vCard xmlns="vcard-temp">
+#          <VERSION>2.0</VERSION>
+#          <FN>Gonzalo Arreche</FN>
+#          <PHOTO>
+#              <TYPE>JPG</TYPE>
+#              <BINVAL></BINVAL>
+#          </PHOTO>
+#      </vCard>
+#    </User>
+#  </Openfire>
+#
+  test 'should create valid users.xml' do
+    test_users = [
+      Attendee.new({ :name => 'Winston Wolff', :email => 'winston@carbonfive.com' }),
+      Attendee.new({ :name => 'Gonzalo Arreche', :email => 'garreche@gmail.com' })
+    ]
+
+    test_users.each { |a| a.set_passcode }
+    xml = make_users_xml(test_users)
+    xml = Nokogiri::Slop(xml)
+
+    users = xml.Openfire.User
+    assert_equal 2, users.length
+
+    winston = users[0]
+    assert_equal 'Winston Wolff', winston.Name.text
+    assert_equal 'winston@carbonfive.com', winston.Email.text
+
+    assert winston.xpath('vcard:vCard', { 'vcard' => 'vcard-temp' }) != nil
+  end
+
 
 #  test 'crypt file AES key and decrypt with f2n_cipher' do
 #    plaintext = 'This is the plaintext'

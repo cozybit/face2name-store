@@ -25,6 +25,9 @@
           = attendee.passcode
 
   %p
+    %a.btn.tk-bree{:href => (url_for attendee_list_event_path(@event))}
+      %span
+        Download Attendee List
     %a.btn.tk-bree{:href => (url_for new_event_attendee_path(@event))}
       %span
         Register New Attendee

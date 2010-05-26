@@ -6,6 +6,7 @@ require 'tmpdir'
 require 'find'
 require 'fileutils'
 require 'openssl'
+require 'builder'
 
 def rails_root_fldr
   if defined? "Rails.root"
@@ -46,28 +47,23 @@ def make_users_xml( attendees )
   result_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <Openfire>
 "
+  now = Time.now().to_i * 1000
 
-  start_date = Time.now()
-  modify_date = Time.now()
-
-  for attendee_name, email, photo_filename in attendees do
-    username = Digest::SHA1.hexdigest( email )
-
-    
-    act_code = make_passcode()
+  for attendee in attendees do
+    username = Digest::SHA1.hexdigest( attendee.email )
     photo_u64_data = "" # Read photo data
 
     result_xml += "  <User>
     <Username>#{username}</Username>
-    <Password>#{act_code}</Password>
-    <Email>#{email}</Email>
-    <Name>#{attendee_name}</Name>
-    <CreationDate>#{start_date.to_i * 1000}</CreationDate>
-    <ModifiedDate>#{modify_date.to_i * 1000}</ModifiedDate>
+    <Password>#{attendee.passcode}</Password>
+    <Email>#{attendee.email}</Email>
+    <Name>#{attendee.name}</Name>
+    <CreationDate>#{now}</CreationDate>
+    <ModifiedDate>#{now}</ModifiedDate>
     <Roster/>
     <vCard xmlns=\"vcard-temp\">
         <VERSION>2.0</VERSION>
-        <FN>#{attendee_name}</FN>
+        <FN>#{attendee.name}</FN>
         <PHOTO>
             <TYPE>JPG</TYPE>
             <BINVAL>#{photo_u64_data}</BINVAL>
@@ -77,7 +73,7 @@ def make_users_xml( attendees )
 "
   end
   result_xml += "</Openfire>\n"
-  
+
   result_xml
 end
 
@@ -305,9 +301,11 @@ def make_configuration_bundle( event )
   #???? TESTING
   File.open( File.join(tarball_source, 'users.xml'), 'w') do |f|
     test_users = [
-        ['Winston Wolff', 'winston@carbonfive.com', nil] ,
-        ['Gonzalo Arreche', 'garreche@gmail.com', nil]
+      Attendee.new({ :name => 'Winston Wolff', :email => 'winston@carbonfive.com' }),
+      Attendee.new({ :name => 'Gonzalo Arreche', :email => 'garreche@gmail.com' })
     ]
+    test_users.each { |a| a.set_passcode }
+
     f.write(make_users_xml(test_users ))
   end
 

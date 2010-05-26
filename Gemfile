@@ -12,6 +12,7 @@ gem 'mechanize'
 gem 'money'
 gem 'mocha'
 gem 'google4r-checkout'
+gem 'hpricot'
 
 gem 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git', :branch => 'rails3'
 gem 'aws-s3'

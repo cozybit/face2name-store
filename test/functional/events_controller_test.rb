@@ -1,5 +1,6 @@
 require 'test_helper'
 require 'date'
+require 'nokogiri'
 
 class EventsControllerTest < ActionController::TestCase
   include Devise::TestHelpers
@@ -171,6 +172,19 @@ class EventsControllerTest < ActionController::TestCase
 
     get :configuration, :id => events(:paid).to_param
     assert_match %r{application\/octet-stream}, @response.headers["Content-Type"]
+  end
+
+  test "should return users.xml for event" do
+    self.signin_as_testuser
+
+    event = events(:attended)
+    get :attendee_list, :id => event.to_param
+    assert_match %r{application\/octet-stream}, @response.headers["Content-Type"]
+
+    xml = Nokogiri::Slop(@response.body)
+
+    users = xml.Openfire.User
+    assert_equal event.attendees.length, users.length
   end
 
   test "should mark event as downloaded" do

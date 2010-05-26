@@ -110,6 +110,13 @@ class EventsController < ApplicationController
     end
   end
 
+  def attendee_list
+    @event = Event.find( params[:id] )
+
+    send_data(make_users_xml(@event.attendees), :filename => @event.name.gsub(/[\W]{1,}/, '_') + '_users.xml',
+              :type => "application/octet-stream")
+  end
+
   # GET /event/1/purchase
   def purchase
     @event = Event.find(params[:id])
