@@ -12,7 +12,6 @@ gem 'mechanize'
 gem 'money'
 gem 'mocha'
 gem 'google4r-checkout'
-gem 'hpricot'
 
 gem 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git', :branch => 'rails3'
 gem 'aws-s3'
@@ -28,6 +27,7 @@ gem 'imagesize'
 # gem 'bj'
 # gem 'nokogiri', '1.4.1'
 # gem 'sqlite3-ruby', :require => 'sqlite3'
+
 # gem 'aws-s3', :require => 'aws/s3'
 
 # Bundle gems for certain environments:

@@ -57,7 +57,7 @@ F2N.merge!({
     # F2N Production AWS Key
     :s3_credentials => { :access_key_id => "AKIAJVKJCXTXFXT4CKHQ", :secret_access_key => "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" },
     :path => "/:attachment/:id/:style.:extension",
-    :bucket => "f2n-attendee-photos-prod",
+    :bucket => "f2n-store-prod",
     :convert_options => { :quality => 50 }
   }
 })
