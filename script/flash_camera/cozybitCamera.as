@@ -126,10 +126,20 @@
             } else if (camera.muted) {
                 // User has blocked the camera.
                 infoText.htmlText = "Click <b>Allow</b>, then <b>Close</b>, and finally <b>Check Camera</b>";
-                Security.showSettings(SecurityPanel.PRIVACY)
-				checkCameraBtn( true );
 
+                // Detect when user has allowed camera access
+                if (! camera.hasEventListener( StatusEvent.STATUS )){
+                    camera.addEventListener( StatusEvent.STATUS, on_camera_status );
+                }
+                
+                Security.showSettings(SecurityPanel.PRIVACY)
+                
             } else {
+                // camera is working.
+
+                // Remove any listeners we installed                
+                camera.removeEventListener(StatusEvent.STATUS, on_camera_status);
+
 				checkCameraBtn( false );
                 infoWelcome();
 
@@ -148,6 +158,11 @@
 		}
 
         private function on_cameraSettingsBtn_click( evt: MouseEvent ){
+            startCamera();
+        }
+        
+        private function on_camera_status( statusEvt: StatusEvent ){
+            trace('on_camera_status() called.');
             startCamera();
         }
         
