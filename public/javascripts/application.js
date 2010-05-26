@@ -3,20 +3,21 @@
 //
 //$(function(){ $("select").uniform(); });
 //$("select, input:checkbox, input:radio, input:file").uniform();
+jQuery.noConflict();
 
-var F2N = {
-  yellow_flash: function($flasher, start_color) {
-    $flasher.css('background-color', '#FFFFC7');
+jQuery(function($) {
+   F2N = {
+    yellow_flash: function($flasher, start_color) {
+      $flasher.css('background-color', '#FFFFC7');
 
-    setTimeout(function() {
-      $flasher.animate({ backgroundColor: start_color }, 1000);
-    }, 500);
+      setTimeout(function() {
+        $flasher.animate({ backgroundColor: start_color }, 1000);
+      }, 500);
+    }
   }
-}
+});
 
-
-$(document).ready(function() {
-
+jQuery(document).ready(function($) {
   $('.user_field_toggle').change(function() {
     var $checkbox = $(this);
     var $td = $($checkbox.parent('td'));

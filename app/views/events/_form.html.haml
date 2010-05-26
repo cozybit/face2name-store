@@ -1,3 +1,24 @@
+= stylesheet_link_tag 'gui.css', 'timeframe.css'
+= javascript_include_tag 'prototype.js', 'timeframe.js'
+
+:css
+  input.date {
+  width: 95px;
+  }
+
+  #calendar_dates {
+  padding-left: 15px;
+  margin-bottom: 20px;
+  }
+
+  #calendar_dates input.error {
+    background-color: #FFCCCC;
+  }
+
+  #dates_field {
+  margin-top: 15px;
+  }
+
 = form_for(@event) do |f|
   - if @event.errors.any?
     #errorExplanation
@@ -10,16 +31,27 @@
             = msg
 
   .field
-    = f.label :name
+    = f.label :name, 'Specify Event Name:'
     = f.text_field :name
-  .field
-    = f.label :not_before
-    = f.date_select :not_before
-  .field
-    = f.label :not_after
-    = f.date_select :not_after
+  .field#dates_field
+    = f.label :not_before, 'Specify Event Dates:'
+    #calendars
+    #calendar_dates
+      From
+      = f.text_field :not_before, :id => 'not_before', :class => 'date'
+      to
+      = f.text_field :not_after, :id => 'not_after', :class => 'date'
+      %a#reset{ :href => '#', :onclick => 'return false;' } (reset)
   .field
     = f.label :admin_password, "Change Password for \"master_admin\""
     = f.text_field :admin_password
   .actions.clearfix
     = f.submit(:class => 'btn tk-bree')
+
+:javascript
+    new Timeframe('calendars', {
+      startField: 'not_before',
+      endField: 'not_after',
+      earliest: new Date(),
+      maxRange: 21,
+      resetButton: 'reset' });
