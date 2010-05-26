@@ -5,7 +5,6 @@ require 'create_config_bundle'
 require 'openssl'
 require 'base64'
 require 'digest/sha2'
-require 'hpricot'
 require 'nokogiri'
 
 class CreateConfigBundleTest < ActiveSupport::TestCase
