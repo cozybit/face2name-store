@@ -45,10 +45,19 @@ F2nstore::Application.configure do
   config.action_mailer.raise_delivery_errors = true
 end
 
-#F2N.merge!({
-#  :google_merchant_info => {
-#    :merchant_id => '505737408619416',
-#    :merchant_key => 'yyWPO3KjnNRI7JoL4pRZxw',
-#    :use_sandbox => false
-#  }
-#})
+F2N.merge!({
+  :google_merchant_info => {
+    :merchant_id => '505737408619416',
+    :merchant_key => 'yyWPO3KjnNRI7JoL4pRZxw',
+    :use_sandbox => true
+  },
+
+  :paperclip_info => {
+    :storage => :s3,
+    # F2N Production AWS Key
+    :s3_credentials => { :access_key_id => "AKIAJVKJCXTXFXT4CKHQ", :secret_access_key => "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" },
+    :path => "/:attachment/:id/:style.:extension",
+    :bucket => "f2n-attendee-photos-prod",
+    :convert_options => { :quality => 50 }
+  }
+})
