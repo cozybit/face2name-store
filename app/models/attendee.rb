@@ -1,4 +1,6 @@
 require 'create_config_bundle'
+require 'base64'
+require_dependency 'open-uri'
 
 class Attendee < ActiveRecord::Base
   belongs_to :event
@@ -14,5 +16,10 @@ class Attendee < ActiveRecord::Base
 
   def set_passcode
     self.passcode = make_passcode
+  end
+
+  def photo_data64
+    return nil if !self.photo.size
+    Base64.encode64(open(self.photo(:thumb)).read)
   end
 end

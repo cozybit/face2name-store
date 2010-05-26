@@ -141,7 +141,12 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
       Attendee.new({ :name => 'Gonzalo Arreche', :email => 'garreche@gmail.com' })
     ]
 
-    test_users.each { |a| a.set_passcode }
+    test_users.each do |a|
+      a.set_passcode
+      a.photo = File.open(Rails.root.join('test', 'fixtures', 'files', 'paperclips.jpg'), 'r')
+      a.save
+    end
+
     xml = make_users_xml(test_users)
     xml = Nokogiri::Slop(xml)
 
@@ -152,9 +157,9 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     assert_equal 'Winston Wolff', winston.Name.text
     assert_equal 'winston@carbonfive.com', winston.Email.text
 
-    assert winston.xpath('vcard:vCard', { 'vcard' => 'vcard-temp' }) != nil
+    assert winston.xpath('vcard:vCard', { 'vcard' => 'vcard-temp' }).length == 1
+    assert winston.xpath('vcard:vCard/vcard:PHOTO/vcard:BINVAL', { 'vcard' => 'vcard-temp' }).to_s.length > 50
   end
-
 
 #  test 'crypt file AES key and decrypt with f2n_cipher' do
 #    plaintext = 'This is the plaintext'

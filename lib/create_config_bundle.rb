@@ -7,6 +7,7 @@ require 'find'
 require 'fileutils'
 require 'openssl'
 require 'builder'
+require 'base64'
 
 def rails_root_fldr
   if defined? "Rails.root"
@@ -32,7 +33,6 @@ def make_passcode()
   
   return act_code
 end
-
 #  Input:
 #    users = a two dimensional array, e.g.:
 #     [
@@ -51,7 +51,8 @@ def make_users_xml( attendees )
 
   for attendee in attendees do
     username = Digest::SHA1.hexdigest( attendee.email )
-    photo_u64_data = "" # Read photo data
+
+    photo_u64_data = attendee.photo_data64
 
     result_xml += "  <User>
     <Username>#{username}</Username>

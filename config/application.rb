@@ -47,8 +47,6 @@ module F2nstore
   end
 end
 
-require "google4r/checkout"
-
 F2N = {
   # Configure CA Certs used for signing Event Certs
   :ca_cert => Rails.root.join('lib', 'crypto', 'f2n_ca.crt'),
