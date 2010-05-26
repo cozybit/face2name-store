@@ -70,8 +70,8 @@
 			infoText.text = "";
 
 			textFmt = new TextFormat();
-			textFmt.color = 0x444444;
-			textFmt.font = "Arial";
+			textFmt.color = 0x1A3C5E;
+			textFmt.font = "Verdana";
 			textFmt.size = "12";
 			
 			btnTake.setStyle("textFormat", textFmt);
