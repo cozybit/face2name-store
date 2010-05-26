@@ -1,6 +1,11 @@
 %style
-  input.registration_url {
+  input#registration_url {
   width: 600px;
+  margin-top: 5px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-family: courier;
+  background: #E5EEF6;
   }
 
 .grid_8
@@ -12,35 +17,40 @@
       = @event.name
     %li
       %b Start date:
-      = @event.not_before
+      = @event.not_before.strftime('%b %d, %Y')
     %li
       %b End date:
-      = @event.not_after
+      = @event.not_after.strftime('%b %d, %Y')
     %li
       %b Administrator password:
       = @event.admin_password
+    %li
+      %b Registrants:
+      = @event.attendees.length
+      - if @event.attendees.any?
+        %a{:href => url_for(:controller => :attendees, :event_id => @event.to_param)} (View Details)
+
     %li
       %b Status
       %span.status
         = display_event_status(@event)
 
   %p
-    This event is now available for online registration. The registration URL for this event is:
-    %input.registration_url{ :type => 'text', :value => registration_url(@event), :readonly => 'true'}
-    - if @event.attendees.any?
-      %a{:href => url_for(:controller => :attendees, :event_id => @event.to_param)} View Attendees
-      (#{@event.attendees.length} registered)
-    - else
+    This event is now available for online registration. The URL below is a special link for you to distribute that will allow your event attendees to register for your event on this site.
+    %input#registration_url{ :type => 'text', :value => registration_url(@event), :readonly => 'true'}
     %br
-      No attendees are yet registered
+    To view existing registrations or to enter one manually select the
+    %strong Manage Attendees
+    link below.
 
   .actions.clearfix
+    %a.btn.tk-bree{:href => url_for(event_attendees_path(@event))} Manage Attendees
     - if @event.downloadable?
       %a.btn.tk-bree.download_link{:href => url_for(configuration_event_path(@event))} Download Configuration
     - else
       %a.btn.tk-bree{:href => url_for(purchase_event_path(@event))} Purchase Event
     - if !@event.downloaded?
-      %a.btn.tk-bree.edit_link{:href => url_for(edit_event_path(@event))} Edit
+      %a.btn.tk-bree.edit_link{:href => url_for(edit_event_path(@event))} Edit Details
 
   -if !@event.downloaded?
     .modal.confirm_modal
@@ -59,6 +69,10 @@
         $('a.download_link').click(function() {
           $('.confirm_modal').jqm({ modal: true, closeClass: 'modal_close'}).jqmShow();
           return false;
+        });
+
+        $("#registration_url").focus(function() {
+          this.select();
         });
 
         $('a.confirm_download_link').click(function() {

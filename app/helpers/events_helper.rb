@@ -14,7 +14,7 @@ module EventsHelper
   end
 
   def registration_url(event)
-    request.protocol + request.host_with_port + new_event_attendee_path(event) 
+    request.protocol + request.host_with_port + new_event_attendee_path(event, { :key => event.registration_key }) 
   end
 
 end

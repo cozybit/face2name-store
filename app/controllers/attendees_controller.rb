@@ -43,7 +43,6 @@ class AttendeesController < ApplicationController
   end
 
   def userservice
-
     @attendee = Attendee.find(params[:id])
 
     if params[:fileData] == nil or params[:fileData].length < 1

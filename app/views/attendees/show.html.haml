@@ -2,13 +2,14 @@
   %h1.title.tk-bree Registration Details
   #attendee_photo
     = image_tag @attendee.photo.url(:thumb)
-  %ul
-    %li
-      %b Name:
-      = @attendee.name
-    %li
-      %b Email:
-      = @attendee.email
+  %p
+    %ul
+      %li
+        %b Name:
+        = @attendee.name
+      %li
+        %b Email:
+        = @attendee.email
 .grid_5
   %h1.title.tk-bree Further Instructions
   %p

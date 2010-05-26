@@ -190,27 +190,26 @@ th {
   font-size: 15px;
 }
 
-#attendee_photo {
-  margin-top: 15px;
-}
-
 .fieldWithErrors {
   display: table;
 }
 
-#errorExplanation {
+#errorExplanation,
+#error_explanation {
   width: 450px;
   margin-top: 15px;
   margin-bottom: 10px;
 }
 
-#errorExplanation h2 {
+#errorExplanation h2,
+#error_explanation h2 {
   font-size: 14px;
   font-weight: bold;
   color: #F00;
 }
 
-#errorExplanation ul li {
+#errorExplanation ul li,
+#error_explanation ul li {
   color: #F00;
 }
 
