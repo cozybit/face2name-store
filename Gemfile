@@ -11,10 +11,11 @@ gem 'haml'
 gem 'mechanize'
 gem 'money'
 gem 'mocha'
-gem 'google4r-checkout'
+gem 'google4r-checkout', :require => 'google4r/checkout'
 
-gem 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git', :branch => 'rails3'
-gem 'aws-s3'
+gem 'paperclip', :git => 'git://github.com/peterpunk/paperclip.git', :branch => 'rails3', :ref => 'b13f7dffab5e323efb728546f4f8d85f121be569'
+
+gem 'aws-s3', :require => 'aws/s3'
 gem 'imagesize'
 
 # Use unicorn as the web server
