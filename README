@@ -1,18 +1,21 @@
-README.txt
-
 face2name Store - May 2010 - Carbon Five
 
-The f2n store is where face2name customers will buy licenses so
-that the f2n store will work for particular events.
+The f2n Store is where face2name customers buy licenses so
+that the f2n Server will work for particular events.
 
-Specs for Configuration Bundle
------------------------------
-    https://123.writeboard.com/c81a2c60a098b49d8
-    (subversion)/face2name\docs\notes\config_bundle\config_bundle_spec.txt
-    (subversion)/face2name\keys\config_bundles\how_to.txt
 
 To install the face2name Store on your machine:
--------------------------------------------------
+===============================================
+
+Give yourself access on GitHub
+    - If you don't have one already, make an SSH key on your computer.
+      See http://help.github.com/mac-key-setup/
+    - Add your SSH public key to GitHub account: www.github.com
+    
+Download the source
+    git clone git@github.com:carbonfive/face2name-store.git
+    (creates a face2name-store folder in the current folder)
+
 
 Install RVM (optional but it's what I use below)
     bash < <( curl http://rvm.beginrescueend.com/releases/rvm-install-latest )
@@ -22,78 +25,38 @@ Install Ruby
     rvm gemset create f2n   (needed for our continuous integration server)
     rvm install ruby-1.8.7-p249
     rvm use ruby-1.8.7-p249@f2n
-    Check with "rvm list" or "rfm info" to see that we are using ___-p249
+    Check with "rvm list" or "rvm info" to see that we are using ___-p249@f2n
     
 Install Rails 3
     rvm gem install bundler
-    bundler install
-#    gem install rails --pre
-#    gem install tzinfo builder memcache-client rack rack-test rack-mount erubis mail text-format thor bundler i18n
+    bundle install  (note the missing R)
     
-
-#Install Sqlite
-#    gem install ruby-devel
-#    gem install sqlite3-ruby
-
-#Install Devise
-#    gem install devise --version=1.1.rc1
-#    Add it to f2nstore_rails/src/Gemfile
-#    rails generate devise_install
-    
-Checkout f2n Store from Subversion
-    svn co https://cozybit.svn.cvsdude.com/f2nstore/trunk/f2nstore_rails
-    (creates a f2nstore_rails folder in the current folder)
-
 Run Tests
-    rails test
+    cd face2name-store
+    rake db:test:prepare
+    rake test
+    (if you have a copy of f2n server running, an integration test will also be run.)
 
 Run Rails
-    cd f2nstore_rails/src
+    cd face2name-store
+    rake db:migrate
     rails server
     (open browser to http://localhost:3000 )
 
 
 Publish app to Heroku
-------------------------------------
+=====================
 
-There are two scripts for deploying to Heroku--testing (src/deploy_test.py) 
-and regular (deploy/deploy.py). The difference is where the files come from.
-The testing version pushes files from your working directory on your
-local machine. The deploy.py version will get files from subversion (eventually
-specifying a particular tag.).
+Install Heroku
+    gem install heroku
 
-The deploy happens in two halves. Follow instructions given by the script itself.
+Add Heroku as a remote GIT repository
+    Add the following lines to face2name-store/.git/config
+        [remote "warm-beach-63"]
+        	url = git@heroku.com:warm-beach-63.git
+        	fetch = +refs/heads/*:refs/remotes/warm-beach-63/*
 
-
-Run f2n SERVER
----------------
-f2n Server is a Java and OpenFire application that will run on the customer's
-machine. To test the store on your machine, you'll need to get the server
-running too.
-
-    Get folders from Subversion, including src, test, and keys folders.
-        svn co https://cozybit.svn.cvsdude.com/face2name
-    
-    Make certificates -- For testing make your own. For production, use the keys in {svn}/keys.
-        cd .../face2name/keys/ca
-        openssl rsa -in keys/ca/f2n_ca.key -out keys/ca/f2n_ca.key.unsecure
-        (Ask Javier for pass phrase)
-    
-    Run Extract script
-        cd .../face2name/tests/openfire
-        ./extract.sh --ssl-ca-cert ../../keys/ca/f2n_ca.crt --ssl-ca-key ../../keys/ca/f2n_ca.key.unsecure --admin-pw admin
-        for winston:
-        ./extract.sh --ssl-ca-cert ../../ww_keys/ca/f2n_ca.crt --ssl-ca-key ../../ww_keys/ca/f2n_ca.key.unsecure --admin-pw admin
-
-    Manually copy Config Import keys
-        cd {svn}/face2name/keys/config_bundles
-        mkdir ../../tests/openfire/test_server/keys/config_bundle
-        (note the "S" is omitted on the test_server directory)
-        cp *.key ../../tests/openfire/test_server/keys/config_bundle/
-    
-    Run the server
-        cd {svn}/face2name/tests/openfire/test_server/bin/
-        (Note that current directory must be 'bin' folder.)
-        ./openfire.sh
-        (open browser to http://localhost:9080 )
+Push the source on your machine to Heroku
+    git push warm-beach-63
+    heroku rake db:migrate  (Depending on your changes, various DB tasks may need to be done.)
     

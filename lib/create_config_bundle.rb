@@ -124,13 +124,13 @@ end
 
 def tar_gz( event_name, output_dir, tarball_source )
   # Create filename
+  event_name_cleaned = event_name.gsub(/\W/,'_').slice(0,40)  # ~20 chars for date and extension. Limit to 64?
   date_str = Date.today.strftime("%Y-%m-%d")
-  event_md5 = Digest::MD5.hexdigest(event_name).slice(0,5)
-  raise "Assert md5 truncated to 5 chars" unless event_md5.length == 5
-  tarball_filename = File.join( output_dir, "face2name-config-bundle-#{date_str}-#{event_md5}.tar.gz" )
-  filenames_to_tar = File.join( output_dir, "filenames_to_tar.txt" )
-  
+  tarball_filename = File.join( output_dir, "#{event_name_cleaned}-#{date_str}.f2nconfig" )
+
+
   # Make list of files to import
+  filenames_to_tar = File.join( output_dir, "filenames_to_tar.txt" )
   f = File.new( filenames_to_tar, 'w' )
   Find.find( tarball_source ) do |path|
     if path != tarball_source # skip listing of the folder itself
@@ -299,21 +299,16 @@ def make_configuration_bundle( event )
   f.write( event.admin_password )
   f.close()
 
-  #???? TESTING
-  File.open( File.join(tarball_source, 'users.xml'), 'w') do |f|
-    test_users = [
-      Attendee.new({ :name => 'Winston Wolff', :email => 'winston@carbonfive.com' }),
-      Attendee.new({ :name => 'Gonzalo Arreche', :email => 'garreche@gmail.com' })
-    ]
-    test_users.each { |a| a.set_passcode }
-
-    f.write(make_users_xml(test_users ))
-  end
-
-  # Take out when Gonzalo changes importer. [ww may 2010]
-  f = File.new( File.join( tarball_source, 'keys', 'f2n_server.pass' ), 'wb' )
-  f.write( "" )
-  f.close()
+#  #???? TESTING
+#  File.open( File.join(tarball_source, 'users.xml'), 'w') do |f|
+#    test_users = [
+#      Attendee.new({ :name => 'Winston Wolff', :email => 'winston@carbonfive.com' }),
+#      Attendee.new({ :name => 'Gonzalo Arreche', :email => 'garreche@gmail.com' })
+#    ]
+#    test_users.each { |a| a.set_passcode }
+#
+#    f.write(make_users_xml(test_users ))
+#  end
 
   # tar/gzip it.
   tgz_filename = tar_gz( event.name, tempdir, tarball_source )

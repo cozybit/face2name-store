@@ -1,5 +1,6 @@
 require 'create_config_bundle'
 require 'google_checkout'
+require 'date'
 
 class EventsController < ApplicationController
   load_and_authorize_resource
@@ -114,7 +115,8 @@ class EventsController < ApplicationController
   def attendee_list
     @event = Event.find( params[:id] )
 
-    send_data(make_users_xml(@event.attendees), :filename => @event.name.gsub(/[\W]{1,}/, '_') + '_users.xml',
+    filename = @event.name.gsub(/[\W]/, '_').slice(0,40) + '-' + Date.today.strftime("%Y-%m-%d")+'-users.xml'
+    send_data(make_users_xml(@event.attendees), :filename => filename,
               :type => "application/octet-stream")
   end
 
