@@ -35,7 +35,7 @@
         .divider
       .grid_3.sidebar
         - if @events or @event
-          - if @event
+          - if @event and @event.id
             %p
               %a.tk-bree{:href => url_for(url_for(event_attendees_path(@event)))} Manage Attendees
               %br

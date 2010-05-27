@@ -29,7 +29,6 @@
       = @event.attendees.length
       - if @event.attendees.any?
         %a{:href => url_for(:controller => :attendees, :event_id => @event.to_param)} (View Details)
-
     %li
       %b Status
       %span.status

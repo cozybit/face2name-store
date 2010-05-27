@@ -1,6 +1,5 @@
 require 'create_config_bundle'
 require 'base64'
-require_dependency 'open-uri'
 
 class Attendee < ActiveRecord::Base
   belongs_to :event
