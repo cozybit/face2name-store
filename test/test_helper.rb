@@ -14,6 +14,7 @@ class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
   def signin_as_testuser
     @user = users(:testuser) # from test fixture
+    assert_not_nil @user, "the testuser is not available. Maybe rake db:seed ?"
     @controller.sign_in @user
     assert @controller.user_signed_in?
   end
