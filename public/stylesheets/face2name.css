@@ -9,6 +9,7 @@ body {
 #header {
   border-bottom:1px #CCCCCC solid;
   height: 80px;
+  position: relative;
 }
 
 #header h1 {
@@ -24,6 +25,28 @@ body {
   margin: 25px 0 10px 15px;  
 }
 
+#nav_links {
+  position: absolute;
+  margin-top: 50px;
+  right: 20px;
+  font-weight: lighter;
+}
+
+#nav_links li {
+  border-right: 1px solid #BBB;
+  padding-right: 15px;
+  padding-left: 15px;
+  display: block;
+  float: left;
+  font-size: 20px;
+}
+
+#nav_links li:last-child {
+  border-right: none;
+  padding-right: 0px;
+}
+
+
 .grid_1 .divider {
   border-right: 1px #CCCCCC solid;
   margin-right: 30px;
@@ -31,10 +54,12 @@ body {
 }
 
 #user_status {
-  margin-top: 10px;
-  margin-right: 10px;
+  position: absolute;
+  margin-top: 5px;
+  right: 20px;
   color: black;
-  float: right;
+  font-size: 13px;
+  font-weight: lighter;
 }
 
 .header a {
@@ -145,6 +170,10 @@ input, select {
   border: 1px solid #F99;
 }
 
+#calendar_dates div.fieldWithErrors {
+  display: inline-block;
+}
+
 label {
   display: block;
   margin-top: 3px;
@@ -158,16 +187,65 @@ label.checkbox_label {
   margin-top: 15px;
 }
 
-tr {
-  border-bottom: 1px solid #CCCCCC;
+table.list {
+  margin-top: 5px;
+  width: 100%;
+  font-size: 13px;
 }
 
-tr:last-child {
+.list tr {
+  border-bottom: 1px solid #CCCCCC;
+  line-height: 1.8em;
+}
+
+.list tr:last-child {
   border-bottom: none;
 }
 
-th {
-  padding-right: 5px;
+.list th {
+  background-color: #EEE;
+}
+
+.list td, th {
+  padding: 3px 10px 0px 10px;
+}
+
+td.spinner, th.spinner {
+  background-position: 95px 1px;
+}
+
+.events .past {
+  background-color: #DDD;
+}
+
+.events .present {
+  background-color: #EFE;
+}
+
+#events_legend li {
+  float: left;
+  margin-right: 15px;
+  line-height: 22px;
+}
+
+#events_legend .color {
+  height: 15px;
+  width: 15px;
+  border: 1px solid #000;
+  float: left;
+  margin-right: 3px;
+}
+
+#events_legend .present {
+  background-color: #DFD;
+}
+
+#events_legend .past {
+  background-color: #DDD;
+}
+
+#events_legend .future {
+  background-color: #FFF;
 }
 
 .left {

@@ -17,30 +17,44 @@
           = current_user.email
           |
           = link_to "sign out", destroy_user_session_path
+      %ul.tk-bree#nav_links
+        %li
+          = link_to 'Home', home_index_path
+        %li
+          = link_to 'Events', events_path
+        %li
+          = link_to 'Downloads', download_path
+        - if current_user && current_user.is_admin?
+          %li
+            = link_to 'Admin', users_path
+
     .clear
     .container.container_12.body
       = yield
       .grid_1
         .divider
       .grid_3.sidebar
-        - if current_user
+        - if @events or @event
+          - if @event
+            %p
+              %a.tk-bree{:href => url_for(url_for(event_attendees_path(@event)))} Manage Attendees
+              %br
+              Manage the attendees for #{@event.name}
           %p
             %a.tk-bree{:href => url_for(url_for(new_event_path()))} Create New Event
             %br
             Create and purchase a new event configuration.
-          - if current_user.events.length > 0
+          - if current_user and current_user.events.length > 0
             %p
               %a.tk-bree{:href => url_for(:controller => '/events')} Manage Events
               %br
               Manage your existing events.
-        %p
-        - if current_user
-          %a.tk-bree{:href => url_for(:controller => '/home', :action => :download)} Download
-          the face to name server or a test configuration bundle for demonstration purposes.
-        - if current_user and current_user.role == 'admin'
           %p
-            %a.tk-bree{:href => url_for(:controller => '/users')} Manage Users
+            %a.tk-bree{:href => url_for(url_for(new_event_path()))} Create New Event
             %br
-            View and Configure face2name users.
+            Create and purchase a new event configuration.
+          %p
+            %a.tk-bree{:href => url_for(:controller => '/home', :action => :download)} Download
+            the face to name server or a test configuration bundle for demonstration purposes.
     #footer
 

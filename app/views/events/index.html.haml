@@ -1,16 +1,18 @@
 :css
-  table {
-    width: 100%;
-  }
-
-  td.spinner {
-    background-position: 95px 1px;
-  }
 
 .grid_8
   %h1.title.tk-bree Listing Events
-
-  %table
+  %ul#events_legend
+    %li
+      .color.present
+      Current
+    %li
+      .color.past
+      Completed
+    %li
+      .color.future
+      Upcoming
+  %table.list.events
     %tr
       - if current_user.is_admin?
         %th.left ID
@@ -22,7 +24,7 @@
       %th.right Ends
 
     - @events.each do |event|
-      %tr
+      %tr{ :class => event_date_status(event) }
         - if current_user.is_admin?
           %td
             = event.id
@@ -35,9 +37,9 @@
         %td.right
           = display_event_status(event)
         %td.right
-          = event.not_before.strftime('%b %d, %Y')
+          = event.not_before.strftime('%m/%d/%y')
         %td.right
-          = event.not_after.strftime('%b %d, %Y')
+          = event.not_after.strftime('%m/%d/%y')
 
   %p
     %a.btn.tk-bree{:href => (url_for new_event_path)}

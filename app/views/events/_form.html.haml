@@ -2,11 +2,12 @@
 = javascript_include_tag 'prototype.js', 'timeframe.js'
 
 :css
+  #dates_field {
+  }
+
   input.date {
   width: 100px;
-  border: 1px #FFB03B solid;
   padding-left: 9px;
-  -moz-border-radius: 12px 12px 12px 12px;
   }
 
   #calendar_dates {
@@ -33,19 +34,19 @@
             = msg
 
   .field
-    = f.label :name, 'Specify Event Name:'
+    = f.label :name, 'Event Name:'
     = f.text_field :name
   .field#dates_field
-    = f.label :not_before, 'Specify Event Dates:'
+    = f.label :not_before, 'Event Dates:'
     #calendars
     #calendar_dates
       From
-      = f.text_field :not_before, :id => 'not_before', :class => 'date'
+      = f.text_field :not_before, :value => @event.not_before ? @event.not_before.strftime('%b %d, %Y') : '', :id => 'not_before', :class => 'date'
       to
-      = f.text_field :not_after, :id => 'not_after', :class => 'date'
+      = f.text_field :not_after, :value => @event.not_after ? @event.not_after.strftime('%b %d, %Y') : '', :id => 'not_after', :class => 'date'
       %a#reset{ :href => '#', :onclick => 'return false;' } (reset)
   .field
-    = f.label :admin_password, "Change Password for \"master_admin\""
+    = f.label :admin_password, "Password for \"master_admin\""
     = f.text_field :admin_password
   .actions.clearfix
     = f.submit(:class => 'btn tk-bree')

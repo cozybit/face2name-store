@@ -1,9 +1,12 @@
 class EventValidator < ActiveModel::Validator
   def validate(record)
-    record.errors[:base] <<  "Event must have a duration of at least 1 day" if not record.not_after - record.not_before >= 1.day
-    record.errors[:base] << "Event cannot have a duration of more than 21 days" if record.not_after - record.not_before > 21.days
+    if record.not_after and record.not_before
+      record.errors[:base] << "Event must have a duration of at least 1 day" if not record.not_after - record.not_before >= 1.day
+      record.errors[:base] << "Event cannot have a duration of more than 21 days" if record.not_after - record.not_before > 21.days
+    end
+
     record.errors[:name] << "Event name may contain only letters, digits, and apostrophe (')" unless
-        record.name.match(/^[ a-zA-Z0-9']+$/)
+      record.name.match(/^[ a-zA-Z0-9']+$/)
   end
 end
 

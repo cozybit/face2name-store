@@ -69,7 +69,12 @@ div.timeframe_calendar table {
   display: inline;
   display: inline-block;
   font-size: 15px;
-  margin: 0 6px 12px;
+  margin: 0 0px 7px;
+  border-right: 1px solid #CCC;
+}
+
+div.timeframe_calendar table:last-child {
+  border: none;
 }
   /* Month names */
   div.timeframe_calendar table caption {

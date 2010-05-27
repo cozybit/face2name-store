@@ -8,7 +8,7 @@ class EventsController < ApplicationController
   def index
     @events = current_user.is_admin?? Event.all : current_user.events
 
-    @events.sort! { |a, b| b.not_before <=> a.not_before }
+    @events.sort! { |a, b| b.not_after <=> a.not_after }
 
     respond_to do |format|
       format.html # index.html.haml
