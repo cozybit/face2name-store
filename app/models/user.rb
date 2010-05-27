@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
 
   has_many :events
 
-  def is_admin?
+  def admin?
     self.role == 'admin'
   end
 end

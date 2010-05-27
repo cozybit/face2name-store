@@ -6,7 +6,7 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.xml
   def index
-    @events = current_user.is_admin?? Event.all : current_user.events
+    @events = current_user.admin?? Event.all : current_user.events
 
     @events.sort! { |a, b| b.not_after <=> a.not_after }
 

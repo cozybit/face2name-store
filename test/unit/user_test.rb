@@ -7,11 +7,11 @@ class UserTest < ActiveSupport::TestCase
 #    assert nil == u.role
 #  end
 
-  test "is_admin? is true for users with admin role" do
+  test "admin? is true for users with admin role" do
     u = User.new
     u.role = 'manager'
-    assert !u.is_admin?
+    assert !u.admin?
     u.role = 'admin'
-    assert u.is_admin?
+    assert u.admin?
   end
 end

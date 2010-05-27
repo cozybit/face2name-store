@@ -14,10 +14,10 @@
       Upcoming
   %table.list.events
     %tr
-      - if current_user.is_admin?
+      - if current_user.admin?
         %th.left ID
       %th.left Name
-      - if current_user.is_admin?
+      - if current_user.admin?
         %th.left Owner
       %th.right Status
       %th.right Begins
@@ -25,13 +25,13 @@
 
     - @events.each do |event|
       %tr{ :class => event_date_status(event) }
-        - if current_user.is_admin?
+        - if current_user.admin?
           %td
             = event.id
         %td
           %a{ :href => url_for(event) }
             = event.name
-        - if current_user.is_admin?
+        - if current_user.admin?
           %td
             = event.user.email
         %td.right
