@@ -29,8 +29,9 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
                          :admin_password => 'simple')
 
     fname, tempfile = make_configuration_bundle( event )
-    assert_equal 'A_Long_Con', File.basename(fname).slice(0,10), "should begin with event name"
-    assert_equal '.f2nconfig', fname.slice(-10,10)
+    assert File.basename(fname).start_with? 'A_Long_Con', "should begin with event name"
+    timestamp = Time.now.strftime('%Y-%m-%d')
+    assert fname.end_with? "#{timestamp}.f2nconfig"
 
   end
 

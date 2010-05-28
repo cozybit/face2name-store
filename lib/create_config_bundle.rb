@@ -271,8 +271,9 @@ def f2n_cipher(tgz_filename)
 
   # replace .tar.gz with .f2nconfig
   output_filename = tgz_filename
-  if output_filename.end_with? '.tar.gz'
-    output_filename = output_filename.slice(0,output_filename.length-8)
+  tar_gz = '.tar.gz'
+  if output_filename.end_with? tar_gz
+    output_filename = output_filename.slice(0,output_filename.length-tar_gz.length)
   end
   output_filename += '.f2nconfig'
 
