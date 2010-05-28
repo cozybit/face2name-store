@@ -11,6 +11,8 @@ class Attendee < ActiveRecord::Base
                       :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i,
                       :message => 'doesn\'t appear to be a valid email address'
 
+  validates_uniqueness_of :email, :scope => :event_id
+
   before_create :set_passcode
 
   def set_passcode
