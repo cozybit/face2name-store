@@ -30,7 +30,6 @@
         private var camera: Camera;
         private var video: Video;
 		private var gBitmapData: BitmapData;
-//		private var gBitmapDataResized: BitmapData;	
 		private var stillImage: Bitmap;	
 		private var gBitmapToSend: Bitmap;			
 		private var urlLoader: URLLoader;
@@ -52,6 +51,7 @@
         }
 		
 		private function init() {
+
             if (width < 215 || height < 138){
                 trace('Stage should be at least 215,138 to fit the Camera privacy dialog. size=',width,height);
             }
@@ -114,10 +114,21 @@
         }
         
         /**
-            Start the camera, or if there is a problem, show a "Check Camera" button.
+            if no camera yet:
+                try to start it.
+            if cannot start, or was started and now stopped:
+                show a "Check Camera" button.
         */
 		private function startCamera(){
             camera = Camera.getCamera();
+
+// debug.text += 'Camera.names='+Camera.names+'\n'
+// debug.text += 'camera='+camera+'\n'
+// if (camera){
+//     debug.text += 'cam name='+camera.name+'camera.muted='+camera.muted+'\n'
+//     debug.text += 'max fps='+camera.fps
+//     debug.text += 'max bandwidth='+camera.bandwidth+'currentFPS='+camera.currentFPS+'\n'
+// }    
             
             if (camera == null) {
 				infoText.text = "You need a camera. Connect one and click <b>Check Camera</b>";
@@ -135,7 +146,7 @@
                 Security.showSettings(SecurityPanel.PRIVACY)
                 
             } else {
-                // camera is working.
+                // camera is connected.
 
                 // Remove any listeners we installed                
                 camera.removeEventListener(StatusEvent.STATUS, on_camera_status);
@@ -147,13 +158,14 @@
 				camera.setQuality(0, 100);
 				camera.setMotionLevel(100);
 
-                video = new Video(camera.width, camera.height);
-				video.smoothing = true;
-				video.attachCamera(camera);
-
+                if (video==null){
+                    video = new Video(camera.width, camera.height);
+                    addChild( video );
+                }
                 video.x = box.x+(box.width-camera.width)/2
                 video.y = box.y+(box.height-camera.height)/2
-                addChild( video );
+                video.smoothing = true;
+				video.attachCamera(camera);
             }
 		}
 
@@ -200,7 +212,6 @@
             var isReady:Boolean = checkJavaScriptReady();
             if (isReady) {
                 infoWelcome();
-//               	infoText.text = "Welcome " + getFirstName() + ", please take your picture.";;
             	Timer(event.target).stop();
             }
         }
@@ -226,6 +237,15 @@
         }
 
 		private function btnTakeClickHandler(event:MouseEvent):void {
+
+		    // Check that the camera is still available
+		    if (camera.currentFPS==0){
+				infoText.htmlText = 'Your camera is connected but no video is coming through. Try rebooting.';
+				checkCameraBtn( true );
+				return;
+            }		        
+            
+
 			if (btnTake.label == "Take Picture") {
 				var gSound:CameraSound = new CameraSound();
 				var soundChannel:SoundChannel = gSound.play();

@@ -26,7 +26,7 @@ class AttendeesController < ApplicationController
 
   def register
     if @event.registration_key == params[:key]
-      session[:tmp_registrant] = TmpRegistrationCredentials.new(nil)
+      session[:tmp_registrant] = TmpRegistrationCredentials.new
       redirect_to new_event_attendee_path(@event, @attendee)
     else
       redirect_to '/403.html', :status => 403
