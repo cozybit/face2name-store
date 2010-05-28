@@ -21,6 +21,19 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     make_configuration_bundle( event )
   end
 
+  test 'config bundle should be named properly' do
+    #                              123456789-123456789-123456789-123456789-123456789-123456789-123
+    event = Event.create(:name => 'A Long Conference Title should be truncated from 63 to 40 chars'+(rand(92-65)+65).chr,
+                         :not_before => Time.now + 1.days,
+                         :not_after => Time.now + 3.days,
+                         :admin_password => 'simple')
+
+    fname, tempfile = make_configuration_bundle( event )
+    assert_equal 'A_Long_Con', File.basename(fname).slice(0,10), "should begin with event name"
+    assert_equal '.f2nconfig', fname.slice(-10,10)
+
+  end
+
   test 'generated certificates are valid for 5 days before and after specified event dates' do
 
     not_before = Time.utc(2010, 5, 10)

@@ -126,7 +126,7 @@ def tar_gz( event_name, output_dir, tarball_source )
   # Create filename
   event_name_cleaned = event_name.gsub(/\W/,'_').slice(0,40)  # ~20 chars for date and extension. Limit to 64?
   date_str = Date.today.strftime("%Y-%m-%d")
-  tarball_filename = File.join( output_dir, "#{event_name_cleaned}-#{date_str}.f2nconfig" )
+  tarball_filename = File.join( output_dir, "#{event_name_cleaned}-#{date_str}.tar.gz" )
 
 
   # Make list of files to import
@@ -267,7 +267,14 @@ end
 # Run the f2n-cipher Java program to encrypt our tarball.
 #
 def f2n_cipher(tgz_filename)
-  output_filename = tgz_filename +'.cipher'
+
+
+  # replace .tar.gz with .f2nconfig
+  output_filename = tgz_filename
+  if output_filename.end_with? '.tar.gz'
+    output_filename = output_filename.slice(0,output_filename.length-8)
+  end
+  output_filename += '.f2nconfig'
 
   tgz = File.open(tgz_filename, 'r')
   out = File.open(output_filename, 'w')
