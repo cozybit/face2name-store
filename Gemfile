@@ -17,6 +17,7 @@ gem 'paperclip', :git => 'git://github.com/peterpunk/paperclip.git', :branch => 
 
 gem 'aws-s3', :require => 'aws/s3'
 gem 'imagesize'
+gem 'cancan'
 
 # Use unicorn as the web server
 # gem 'unicorn'

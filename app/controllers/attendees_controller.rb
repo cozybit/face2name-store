@@ -7,8 +7,30 @@ class AttendeesController < ApplicationController
 
   before_filter :load_event
 
+  load_and_authorize_resource :nested => :event
+
+  def current_ability
+    if [:new, :create, :new_photo, :upload_photo, :show ].member? request[:action].to_sym
+      user = session[:attendee_user]
+    end
+
+    user ||= current_user
+
+    @current_ability ||= Ability.new(user)
+  end
+
   def index
+    authorize! :read, @event
     @attendees = @event.attendees
+  end
+
+  def register
+    if @event.registration_key == params[:key]
+      session[:attendee_user] = AttendeeUser.new(nil)
+      redirect_to new_event_attendee_path(@event, @attendee)
+    else
+      redirect_to '/403.html', :status => 403
+    end
   end
 
   def new
@@ -19,6 +41,8 @@ class AttendeesController < ApplicationController
     @attendee = @event.attendees.build(params[:attendee])
 
     if @attendee.save
+      session[:attendee_user].attendee_id = @attendee.id if session[:attendee_user]
+
       redirect_to(new_photo_event_attendee_path(@event, @attendee), :notice => 'Attendee was successfully created.')
     else
       render :action => "new"
