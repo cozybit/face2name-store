@@ -5,8 +5,7 @@ class EventsController < ApplicationController
   load_and_authorize_resource
 
   before_filter :authenticate_user!
-  # GET /events
-  # GET /events.xml
+
   def index
     @events = current_user.admin?? Event.all : current_user.events
 

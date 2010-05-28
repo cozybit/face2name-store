@@ -11,7 +11,7 @@ class AttendeesController < ApplicationController
 
   def current_ability
     if [:new, :create, :new_photo, :upload_photo, :show ].member? request[:action].to_sym
-      user = session[:attendee_user]
+      user = session[:tmp_registrant]
     end
 
     user ||= current_user
@@ -26,7 +26,7 @@ class AttendeesController < ApplicationController
 
   def register
     if @event.registration_key == params[:key]
-      session[:attendee_user] = AttendeeUser.new(nil)
+      session[:tmp_registrant] = TmpRegistrationCredentials.new(nil)
       redirect_to new_event_attendee_path(@event, @attendee)
     else
       redirect_to '/403.html', :status => 403
@@ -41,7 +41,7 @@ class AttendeesController < ApplicationController
     @attendee = @event.attendees.build(params[:attendee])
 
     if @attendee.save
-      session[:attendee_user].attendee_id = @attendee.id if session[:attendee_user]
+      session[:tmp_registrant].attendee_id = @attendee.id if session[:tmp_registrant]
 
       redirect_to(new_photo_event_attendee_path(@event, @attendee), :notice => 'Attendee was successfully created.')
     else

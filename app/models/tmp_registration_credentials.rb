@@ -1,11 +1,7 @@
-class AttendeeUser
+class TmpRegistrationCredentials
   attr_accessor :attendee_id
 
-  def initialize(id)
-    @attendee_id = id
-  end
-
-  def attendee?
+  def registrant?
     true
   end
 

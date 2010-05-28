@@ -2,10 +2,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   layout 'application'
 
-  rescue_from CanCan::AccessDenied do |exception|
-    flash[:error] = "Access denied."
-    redirect_to root_url
-  end
+#  rescue_from CanCan::AccessDenied do |exception|
+#    flash[:error] = "Access denied."
+#    redirect_to root_url
+#  end
 
   def render_json_response(type, hash={})
     unless [ :ok, :redirect, :error ].include?(type)
