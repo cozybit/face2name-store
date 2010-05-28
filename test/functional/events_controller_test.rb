@@ -9,13 +9,15 @@ class EventsControllerTest < ActionController::TestCase
     @event = events(:one)
   end
 
-  test "should get index" do
-    # should fail without authentication
+  test "not logged in user shouldn't see index" do
     get :index
     assert_response 302
-    
+  end
+
+  test "should get index" do
     self.signin_as_testuser
     get :index
+
     assert_response :success
     assert_not_nil assigns(:events)
   end
@@ -92,23 +94,24 @@ class EventsControllerTest < ActionController::TestCase
     assert assigns(:event).status == :paid
   end
 
-  test "should show event" do
+  test 'only logged in can see event' do
     get :show, :id => @event.to_param
-    # should fail without authentication
     assert_response 302
+  end
 
-    # once signed in, should be available
+  test 'only event owner should see event' do
+    @controller.sign_in users(:unlimited)
+    get :show, :id => @event.to_param
+    assert_response 302
+  end
+
+  test "should show event" do
     self.signin_as_testuser
     get :show, :id => @event.to_param
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, :id => @event.to_param
-    # should fail without authentication
-    assert_response 302
-
-    # once signed in, should be available
     self.signin_as_testuser
     get :edit, :id => @event.to_param
     assert_response :success
@@ -122,16 +125,7 @@ class EventsControllerTest < ActionController::TestCase
     assert_redirected_to event_path(event)
   end
 
-  test "should update event only when authenticated" do
-    original_name = @event.name
-    put :update, :id => @event.to_param, :event => { :name=>'updated event', :admin_password=>'simple'}
-    # should fail without authentication
-    assert_response 302
-
-    @event.reload
-    assert_equal original_name, @event.name
-
-    # once signed in, should be available
+  test "should update event when owner" do
     self.signin_as_testuser
     put :update, :id => @event.to_param, :event => { :name=>'updated event', :admin_password=>'simple' }
     assert_redirected_to event_path(assigns(:event))

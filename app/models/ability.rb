@@ -34,6 +34,10 @@ class Ability
     #  attendee.nil? or attendee.event.nil? or attendee.event.user_id == user.id
     #end
 
-    can [ :manage ], Attendee
+    can [ :manage ], Attendee do |action, attendee|
+      attendee && attendee.event.user_id == user.id
+    end
+    
+    can [ :index, :create ], Attendee
   end
 end

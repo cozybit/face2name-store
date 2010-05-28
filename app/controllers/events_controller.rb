@@ -5,8 +5,6 @@ require 'date'
 class EventsController < ApplicationController
   load_and_authorize_resource
 
-  before_filter :authenticate_user!
-
   def index
     @events = current_user.admin?? Event.all : current_user.events
 

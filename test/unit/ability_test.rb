@@ -109,14 +109,19 @@ class AbilityTest < ActiveSupport::TestCase
 
   test 'event managers can manage attendees' do
     user = User.new
+    user.id = 666
 
     ability = Ability.new(user)
 
     event = Event.new(:user_id => 666)
-    can_attendee = event.attendees.new
+    can_attendee = Attendee.new(:event => event)
     can_attendee.id = 666
 
+    event = Event.new(:user_id => 898)
+    cant_attendee = Attendee.new(:event => event)
+    cant_attendee.id = 555
+
     can_cannot(ability, ATTENDEE_CLASS, Attendee, nil)
-    can_cannot(ability, ATTENDEE_CLASS, can_attendee, nil)
+    can_cannot(ability, ATTENDEE_INSTANCE, can_attendee, cant_attendee)
   end
 end

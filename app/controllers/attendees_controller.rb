@@ -2,7 +2,6 @@ require 'base64'
 require 'tempfile'
 
 class AttendeesController < ApplicationController
-  #protect_from_forgery :except => [:userservice]
   skip_before_filter :verify_authenticity_token, :only => [:userservice]
 
   before_filter :load_event
