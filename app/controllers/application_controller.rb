@@ -7,6 +7,14 @@ class ApplicationController < ActionController::Base
     redirect_to root_url
   end
 
+  def page_title
+    return "face2name" # AttendeesController chooses a different title.
+  end
+
+  def registering_attendee?
+    false # overridden in AttendeesController
+  end
+  
   def render_json_response(type, hash={})
     unless [ :ok, :redirect, :error ].include?(type)
       raise "Invalid json response type: #{type}"

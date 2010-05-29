@@ -8,6 +8,9 @@ class AttendeesController < ApplicationController
 
   load_and_authorize_resource :nested => :event
 
+  # Which actions are part of the Registration process, i.e. accessed with TmpRegistrationCredentials
+  REGISTRATION_ACTIONS = [:register, :show, :new, :new_photo, :upload_photo, :userservice ]
+
   def current_ability
     if [:new, :create, :new_photo, :upload_photo, :show ].member? request[:action].to_sym
       user = session[:tmp_registrant]
@@ -16,6 +19,24 @@ class AttendeesController < ApplicationController
     user ||= current_user
 
     @current_ability ||= Ability.new(user)
+  end
+
+  def page_title
+    if REGISTRATION_ACTIONS.include? action_name.to_sym
+      # People registering for event should see event's name rather than "face2name"  
+      return @event.name
+    else
+      return super
+    end
+  end
+
+  def registering_attendee?
+    if REGISTRATION_ACTIONS.include? action_name.to_sym
+      # People registering for event should see event's name rather than "face2name"
+      return true
+    else
+      return super
+    end
   end
 
   def index
