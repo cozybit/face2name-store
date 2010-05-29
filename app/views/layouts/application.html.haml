@@ -33,38 +33,39 @@
       = yield
     .grid_1
       .divider
-      .grid_3.sidebar
-      hello my friend !!!!!!!!!!!
-        - if controller.registering_attendee?
-          Start date:
+    .grid_3.sidebar
+      - if controller.registering_attendee?
+        %h2.tk-bree
+          Event Details
+        %p
+          %b Begins:
+          = @event.not_before.strftime('%B %d, %Y')
           %br
-          = @event.not_before
-          End date:
-          %br
-          = @event.not_after
+          %b Ends:
+          = @event.not_after.strftime('%B %d, %Y')
 
-        - else
-          - if @events or @event
-            - if @event and @event.id
-              %p
-                %a.tk-bree{:href => url_for(url_for(event_attendees_path(@event)))} Manage Attendees
-                %br
-                Manage the attendees for #{@event.name}
+      - else
+        - if @events or @event
+          - if @event and @event.id
             %p
-              %a.tk-bree{:href => url_for(url_for(new_event_path()))} Create New Event
+              %a.tk-bree{:href => url_for(url_for(event_attendees_path(@event)))} Manage Attendees
               %br
-              Create and purchase a new event configuration.
-            - if current_user and current_user.events.length > 0
-              %p
-                %a.tk-bree{:href => url_for(:controller => '/events')} Manage Events
-                %br
-                Manage your existing events.
+              Manage the attendees for #{@event.name}
           %p
             %a.tk-bree{:href => url_for(url_for(new_event_path()))} Create New Event
             %br
             Create and purchase a new event configuration.
-          %p
-            %a.tk-bree{:href => url_for(:controller => '/home', :action => :download)} Download
-            the face to name server or a test configuration bundle for demonstration purposes.
+          - if current_user and current_user.events.length > 0
+            %p
+              %a.tk-bree{:href => url_for(:controller => '/events')} Manage Events
+              %br
+              Manage your existing events.
+        %p
+          %a.tk-bree{:href => url_for(url_for(new_event_path()))} Create New Event
+          %br
+          Create and purchase a new event configuration.
+        %p
+          %a.tk-bree{:href => url_for(:controller => '/home', :action => :download)} Download
+          the face to name server or a test configuration bundle for demonstration purposes.
     #footer
 
