@@ -79,10 +79,16 @@ class AttendeesController < ApplicationController
 
   def upload_photo
     @attendee = Attendee.find(params[:id])
+
+    if params[:attendee].nil? or params[:attendee][:photo].nil?
+      @attendee.errors.add :photo, 'You must specify a valid file to upload.'
+      return render :template => 'attendees/new_photo'
+    end
+
     if @attendee.update_attributes( params[:attendee] )
       redirect_to event_attendee_path(@event, @attendee)
     else
-      redirect_to upload_photo_event_attendee_path(@event, @attendee)
+      return render :template => 'attendees/new_photo'
     end
   end
 
