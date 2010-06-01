@@ -67,7 +67,7 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     # Check end-date
     #    e.g.: "notBefore=May 11 21:24:46 2010 GMT"
     expect_output_regex = /notAfter=#{expect_end_time.strftime('%b %e')} \d+\:\d+\:\d+ #{expect_end_time.strftime('%Y')} GMT/
-    cmd = "openssl x509 -inform DER -noout -enddate -in #{cert_name} 2>&1"
+    cmd = "openssl x509 -noout -enddate -in #{cert_name} 2>&1"
     output = run_cmd( cmd )
     assert_match(expect_output_regex, output )
 

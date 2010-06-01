@@ -228,14 +228,14 @@ def openssl_certificates( temp_dir, keys_dir, cert_serial_num, event_name, not_b
     f.write( "%02x" % cert_serial_num ) # Serial file is in hex format
   end
   
-  cmd = "openssl ca -batch -in \"#{f2n_server_csr}\" -cert \"#{ssl_ca_cert}\" -keyfile \"#{ssl_ca_key}\" " +
-        "-out \"#{ssl_server_cert}.pem\" -extensions \"usr_cert\" -config \"#{openssl_config}\" 2>&1"
+  cmd = "openssl ca -batch -in \"#{f2n_server_csr}\" -notext -cert \"#{ssl_ca_cert}\" -keyfile \"#{ssl_ca_key}\" " +
+        "-out \"#{ssl_server_cert}\" -extensions \"usr_cert\" -config \"#{openssl_config}\" 2>&1"
 
   run_cmd( cmd, "Certificate signing failed")
 
   # convert encryption to DER
-  cmd = "openssl x509 -in \"#{ssl_server_cert}.pem\" -inform PEM -out \"#{ssl_server_cert}\" -outform DER"
-  run_cmd( cmd, "Certificate conversion to DER format failed.")
+#  cmd = "openssl x509 -in \"#{ssl_server_cert}.pem\" -inform PEM -out \"#{ssl_server_cert}\" -outform DER"
+#  run_cmd( cmd, "Certificate conversion to DER format failed.")
 
   return ssl_server_cert
 end
