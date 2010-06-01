@@ -47,6 +47,8 @@ end
 
 F2N.deep_merge!({
   :google_merchant_info => {
+    :merchant_id => '629004277395740',
+    :merchant_key => 'Wge2vsXyG8FnNJbHR-JYQg',
     :use_sandbox => false
   },
 
