@@ -133,8 +133,8 @@ def tar_gz( event_name, output_dir, tarball_source )
   filenames_to_tar = File.join( output_dir, "filenames_to_tar.txt" )
   f = File.new( filenames_to_tar, 'w' )
   Find.find( tarball_source ) do |path|
-    if path != tarball_source # skip listing of the folder itself
-      path[0..tarball_source.size] = ""  # remove folder
+    if ! File.directory? path # skip any folders.
+      path[0..tarball_source.size] = ""  # trim off the folder name
       f.write( path +"\n")
     end
   end

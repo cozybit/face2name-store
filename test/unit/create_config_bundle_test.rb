@@ -179,15 +179,11 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
                          :not_before => Time.now + 1.days,
                          :not_after => Time.now + 3.days,
                          :admin_password => 'simple')
-
     fname, tempfolder = make_configuration_bundle( event )
     tarball_fname = fname.gsub('f2nconfig', 'tar.gz')
 
     files_in_tar = %x[tar -tf #{tarball_fname}]
-
     assert_equal 1, files_in_tar.scan('keys/f2n_server.cert').length
-
-
   end
 
 #  test 'crypt file AES key and decrypt with f2n_cipher' do
