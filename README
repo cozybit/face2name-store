@@ -44,7 +44,7 @@ Run Rails
     (open browser to http://localhost:3000 )
 
 
-Publish app to Heroku
+Publish f2n Store to Heroku
 =====================
 
 Install Heroku

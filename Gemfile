@@ -8,7 +8,6 @@ gem 'devise', '1.1.rc1'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'haml'
-gem 'mechanize'
 gem 'money'
 gem 'mocha'
 gem 'google4r-checkout', :require => 'google4r/checkout'
@@ -16,8 +15,13 @@ gem 'google4r-checkout', :require => 'google4r/checkout'
 gem 'paperclip', :git => 'git://github.com/peterpunk/paperclip.git', :branch => 'rails3', :ref => 'b13f7dffab5e323efb728546f4f8d85f121be569'
 
 gem 'aws-s3', :require => 'aws/s3'
-gem 'imagesize'
 gem 'cancan'
+
+group :test do
+  gem "rspec-rails", ">= 2.0.0.beta.1"
+  gem 'mechanize'
+  gem 'imagesize'
+end
 
 # Use unicorn as the web server
 # gem 'unicorn'
