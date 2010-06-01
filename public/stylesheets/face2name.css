@@ -20,6 +20,15 @@ body {
   color: #0079C1;
 }
 
+#reg-title {
+  display: inline-block;
+  float: left;
+  margin: 30px 0px 0px 10px;
+  font-size: 30px;
+  color: #0079C1;
+  font-weight: bold;
+}
+
 #header_image {
   float: left;
   margin: 25px 0 10px 15px;  

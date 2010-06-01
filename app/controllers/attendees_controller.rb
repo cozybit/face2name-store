@@ -21,18 +21,12 @@ class AttendeesController < ApplicationController
     @current_ability ||= Ability.new(user)
   end
 
-  def page_title
-    if REGISTRATION_ACTIONS.include? action_name.to_sym
-      # People registering for event should see event's name rather than "face2name"  
-      return @event.name
-    else
-      return super
-    end
-  end
-
+  # Returns true if the current controller and action is part of the "temporary
+  # credential" registration process.
+  #
+  # Used by layout so the page renders differently.
   def registering_attendee?
     if REGISTRATION_ACTIONS.include? action_name.to_sym
-      # People registering for event should see event's name rather than "face2name"
       return true
     else
       return super
