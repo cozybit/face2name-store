@@ -15,20 +15,19 @@ F2nstore::Application.configure do
   config.action_controller.perform_caching = false
 
   config.action_mailer.perform_deliveries = false
-  config.action_mailer.raise_delivery_errors = true
-#  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.raise_delivery_errors = false
 #  config.action_mailer.smtp_settings = {
 #      :address => "smtp.carbonfive.com",
 #      :port => 25,
 #      :enable_starttls_auto => false
 #  }
 
-  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+#  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
 
 end
 
 Paperclip.options[:command_path] = "/opt/local/bin"
 
 F2N.deep_merge!({
-  :cleanup_configs => false
+  :cleanup_configs => true
 })

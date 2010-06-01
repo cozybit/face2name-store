@@ -35,7 +35,7 @@ end
 
 Paperclip.options[:command_path] = "/opt/local/bin"
 
-F2N.merge!({
+F2N.deep_merge!({
   # Configure CA Certs used for signing Event Certs
   :ca_cert => Rails.root.join('test', 'resources', 'crypto', 'ca.cert'),
   :ca_key => Rails.root.join('test', 'resources', 'crypto', 'ca.key'),

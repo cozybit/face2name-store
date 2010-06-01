@@ -1,4 +1,3 @@
-require 'date'
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
@@ -16,12 +15,3 @@ admin = User.create(
 admin.role = 'admin'
 # admin.confirmed_at = DateTime.now()
 admin.save
-
-# This user can create configurations without paying.
-unlimited = User.create(
-    :email => 'unlimited@test.com',
-    :password => 'simple',
-    :password_confirmation => 'simple'
-)
-unlimited.is_unlimited = true # not mass-assignable.
-unlimited.save

@@ -25,7 +25,7 @@ class AttendeeTest < ActiveSupport::TestCase
     attendee.photo = File.open(Rails.root.join('test', 'fixtures', 'files', 'paperclips.jpg'), 'r')
     attendee.save
 
-    assert_match %r"^http://s3.amazonaws.com/face2name-store/photos", attendee.photo.url(:thumb)
+    assert_match %r"^http://s3.amazonaws.com/f2n-store-.*/photos", attendee.photo.url(:thumb)
   end
 
   test 'should return valid b64 encoded image from s3' do

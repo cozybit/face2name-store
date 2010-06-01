@@ -69,9 +69,9 @@ F2N = {
 
   :paperclip_info => {
     :storage => :s3,
-    :s3_credentials => { :access_key_id => "1414VZ2X13XZGN9BPP02", :secret_access_key => "c1zKHGB+PLp1YUcdWg4OvpIo7sdjxZV7AkwATp7t" },
+    :s3_credentials => { :access_key_id => "AKIAJVKJCXTXFXT4CKHQ", :secret_access_key => "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" },
     :path => "/:attachment/:id/:style.:extension",
-    :bucket => "face2name-store",
-    :convert_options => { :quality => 80 }
+    :bucket => "f2n-store-development",
+    :convert_options => { :quality => 60 }
   }
 }

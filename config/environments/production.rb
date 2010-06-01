@@ -29,7 +29,7 @@ F2nstore::Application.configure do
 
   # Disable Rails's static asset server
   # In production, Apache or nginx will already do this
-  config.serve_static_assets = false
+  config.serve_static_assets = true
 
   # Enable serving of images, stylesheets, and javascripts from an asset server
   # config.action_controller.asset_host = "http://assets.example.com"
@@ -45,19 +45,12 @@ F2nstore::Application.configure do
   config.action_mailer.raise_delivery_errors = true
 end
 
-F2N.merge!({
+F2N.deep_merge!({
   :google_merchant_info => {
-    :merchant_id => '505737408619416',
-    :merchant_key => 'yyWPO3KjnNRI7JoL4pRZxw',
-    :use_sandbox => true
+    :use_sandbox => false
   },
 
   :paperclip_info => {
-    :storage => :s3,
-    # F2N Production AWS Key
-    :s3_credentials => { :access_key_id => "AKIAJVKJCXTXFXT4CKHQ", :secret_access_key => "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" },
-    :path => "/:attachment/:id/:style.:extension",
     :bucket => "f2n-store-prod",
-    :convert_options => { :quality => 50 }
   }
 })
