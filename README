@@ -3,14 +3,19 @@ face2name Store - May 2010 - Carbon Five
 The f2n Store is where face2name customers buy licenses so
 that the f2n Server will work for particular events.
 
+The latest version of this file is stored in Git at:
+    git@github.com:carbonfive/face2name-store.git > README
+    
 
 To install the face2name Store on your machine:
 ===============================================
 
 Give yourself access on GitHub
-    - If you don't have one already, make an SSH key on your computer.
+    - Create a github account at www.github.com
+    - As part of your github account, make an SSH key on your computer.
       See http://help.github.com/mac-key-setup/
-    - Add your SSH public key to GitHub account: www.github.com
+    - Email carbonfive with your account name and ask to be added as a collaborator
+      to the face2name repository.
     
 Download the source
     git clone git@github.com:carbonfive/face2name-store.git
@@ -19,44 +24,61 @@ Download the source
 
 Install RVM (optional but it's what I use below)
     bash < <( curl http://rvm.beginrescueend.com/releases/rvm-install-latest )
-    And then follow directions about appending something to your .bashrc
+    - And then follow directions about appending something to your .bash_profile.
+    - You should now be able to type "rvm list" and rvm will give you some help.
+    - When you "cd face2name-store", rvm will say "info: Using ruby 1.8.7 p249 with gemset f2n"
 
 Install Ruby
-    rvm gemset create f2n   (needed for our continuous integration server)
     rvm install ruby-1.8.7-p249
+    rvm use ruby-1.8.7-p249
+    rvm gemset create f2n   (needed for our continuous integration server)
     rvm use ruby-1.8.7-p249@f2n
-    Check with "rvm list" or "rvm info" to see that we are using ___-p249@f2n
+    - Check that "rvm list" shows an arrow at: => ruby-1.8.7-p249
+    - Check that "rvm info" shows gemset: "f2n"
     
-Install Rails 3
-    rvm gem install bundler
-    bundle install  (note the missing R)
+Install Rails 3 and all dependencies.
+    cd face2name-store
+    gem install bundler
+    bundle install  (note the missing R) (This downloads and installs everything.
     
 Run Tests
     cd face2name-store
+    rake db:migrate
     rake db:test:prepare
     rake test
-    (if you have a copy of f2n server running, an integration test will also be run.)
+    - This runs three sets of tests. So check that all three report something like:
+        ## tests, ## assertions, 0 failures, 0 errors
+ 
 
 Run Rails
     cd face2name-store
-    rake db:migrate
     rails server
-    (open browser to http://localhost:3000 )
+    - open browser to http://localhost:3000
+    - login with admin@test.com / simple
 
 
 Publish f2n Store to Heroku
-=====================
+===========================
 
-Install Heroku
+Get access to Heroku
+    - Javier logs in to www.heroku.com as javier@cozybit.com 
+      (hopefully he remembers the password)
+    - Javier goes to f2n-store-staging > General Info > Collaborators and 
+      adds your email to invite you.
+
+Install Heroku tool
+    cd face2name-store
     gem install heroku
 
 Add Heroku as a remote GIT repository
-    Add the following lines to face2name-store/.git/config
-        [remote "warm-beach-63"]
-        	url = git@heroku.com:warm-beach-63.git
-        	fetch = +refs/heads/*:refs/remotes/warm-beach-63/*
+    heroku keys:add ~/.ssh/id_rsa.pub (you should already have an id_rsa.pub)
+    git remote add staging git@heroku.com:f2n-store-staging.git
+    - or - 
+    git remote add production git@heroku.com:f2n-store-production.git
 
 Push the source on your machine to Heroku
-    git push warm-beach-63
+    git push staging (takes nickname from the "gem remote add" command above.)
     heroku rake db:migrate  (Depending on your changes, various DB tasks may need to be done.)
+
+
     
