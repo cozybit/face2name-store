@@ -1,6 +1,7 @@
 require 'create_config_bundle'
 require 'google_checkout'
 require 'date'
+require 'nokogiri'
 
 class EventsController < ApplicationController
   load_and_authorize_resource
