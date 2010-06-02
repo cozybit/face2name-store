@@ -238,4 +238,12 @@ class EventsControllerTest < ActionController::TestCase
 
     assert_redirected_to event_path(assigns(:event))
   end
+
+  test 'confirm passcode returns XML event data' do
+    loretta = attendees(:loretta)
+    get :confirm_passcode, :email => loretta.email, :passcode => loretta.passcode
+
+    assert_response :success
+    puts response.body
+  end
 end

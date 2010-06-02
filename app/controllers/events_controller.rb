@@ -9,90 +9,52 @@ class EventsController < ApplicationController
     @events = current_user.admin?? Event.all : current_user.events
 
     @events.sort! { |a, b| b.not_after <=> a.not_after }
-
-    respond_to do |format|
-      format.html # index.html.haml
-      format.xml  { render :xml => @events }
-    end
   end
 
-  # GET /events/1
-  # GET /events/1.xml
   def show
     @event = ::Event.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.haml
-      format.xml  { render :xml => @event }
-    end
   end
 
-  # GET /events/new
-  # GET /events/new.xml
   def new
     @event = Event.new
-
-    respond_to do |format|
-      format.html # new.html.haml
-      format.xml  { render :xml => @event }
-    end
   end
 
-  # GET /events/1/edit
   def edit
     @event = Event.find(params[:id])
 
     return redirect_to event_url(@event) if @event.downloaded?
   end
 
-  # POST /events
-  # POST /events.xml
   def create
     @event = current_user.events.build(params[:event])
     @event.status = :paid if current_user.is_unlimited?
     
-    respond_to do |format|
-      if @event.save
-        format.html { redirect_to(@event, :notice => 'Event was successfully created.') }
-        format.xml  { render :xml => @event, :status => :created, :location => @event }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
-      end
+    if @event.save
+      redirect_to(@event, :notice => 'Event was successfully created.')
+    else
+      render :action => "new"
     end
   end
 
-  # PUT /events/1
-  # PUT /events/1.xml
   def update
     @event = Event.find(params[:id])
 
     return redirect_to event_url(@event) if @event.downloaded?
 
-    respond_to do |format|
       if @event.update_attributes(params[:event])
-        format.html { redirect_to(@event, :notice => 'Event was successfully updated.') }
-        format.xml  { head :ok }
+        redirect_to(@event, :notice => 'Event was successfully updated.')
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
+        render :action => "edit"
       end
-    end
   end
 
-  # DELETE /events/1
-  # DELETE /events/1.xml
   def destroy
     @event = Event.find(params[:id])
     @event.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(events_url) }
-      format.xml  { head :ok }
-    end
+    redirect_to(events_url)
   end
 
-  # GET /event/1/configuration
   def configuration
     @event = Event.find( params[:id] )
 
@@ -118,7 +80,6 @@ class EventsController < ApplicationController
               :type => "application/octet-stream")
   end
 
-  # GET /event/1/purchase
   def purchase
     @event = Event.find(params[:id])
 
@@ -136,5 +97,33 @@ class EventsController < ApplicationController
     else
       redirect_to '/403.html', :status => 403
     end
+  end
+
+  def confirm_passcode
+    attendee = Attendee.find_by_email_and_passcode(params[:email], params[:passcode])
+
+    event = attendee.event
+
+    api_xml = Nokogiri::XML::Builder.new { |xml|
+      xml.event {
+        xml.name event.name
+        xml.not_before event.not_before.strftime("%Y-%m-%d")
+        xml.not_after event.not_after.strftime("%Y-%m-%d")
+        xml.roster {
+          event.attendees.each do |attendee|
+            xml.vCard('xmlns' => 'vcard-temp') {
+              xml.VERSION '2.0'
+              xml.FN attendee.name
+              xml.PHOTO {
+                xml.TYPE 'JPG'
+                xml.BINVAL attendee.photo_data64
+              }
+            }
+          end
+        }
+      }
+    }
+
+    render :xml => api_xml
   end
 end

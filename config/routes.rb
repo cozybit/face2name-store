@@ -6,6 +6,9 @@ F2nstore::Application.routes.draw do |map|
 
   resources :users
   resources :events do
+    collection do
+      get :confirm_passcode
+    end
     member do
       get :configuration, :attendee_list, :purchase, :confirm
     end

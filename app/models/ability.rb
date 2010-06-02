@@ -5,6 +5,7 @@ class Ability
 
   def initialize(user)
     can :register, Attendee
+    can :confirm_passcode, Event
 
     return if user.nil?
 
@@ -24,6 +25,8 @@ class Ability
   def set_tmp_registrant_abilities(user)
     can [ :create ], Attendee
     can REGISTRATION_ACTIONS, Attendee, :id => user.attendee_id
+
+    can :confirm_passcode, Event
   end
 
   def set_event_manager_abilities(user)
@@ -39,5 +42,6 @@ class Ability
     end
     
     can [ :index, :create ], Attendee
+    can :confirm_passcode, Event
   end
 end
