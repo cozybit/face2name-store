@@ -110,44 +110,6 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     assert plaintext == unencrypted
   end
 
-#  <?xml version="1.0" encoding="UTF-8"?>
-#  <Openfire>
-#    <User>
-#      <Username>2618fa31d056c6bb01a38f7681c03250970dd77c</Username>
-#      <Password>KUKWNK</Password>
-#      <Email>winston@carbonfive.com</Email>
-#      <Name>Winston Wolff</Name>
-#      <CreationDate>1274897145000</CreationDate>
-#      <ModifiedDate>1274897145000</ModifiedDate>
-#      <Roster/>
-#      <vCard xmlns="vcard-temp">
-#          <VERSION>2.0</VERSION>
-#          <FN>Winston Wolff</FN>
-#          <PHOTO>
-#              <TYPE>JPG</TYPE>
-#              <BINVAL></BINVAL>
-#          </PHOTO>
-#      </vCard>
-#    </User>
-#    <User>
-#      <Username>9d6f1825fe8016a61946948c58817f874b1dd38a</Username>
-#      <Password>RLCYMB</Password>
-#      <Email>garreche@gmail.com</Email>
-#      <Name>Gonzalo Arreche</Name>
-#      <CreationDate>1274897145000</CreationDate>
-#      <ModifiedDate>1274897145000</ModifiedDate>
-#      <Roster/>
-#      <vCard xmlns="vcard-temp">
-#          <VERSION>2.0</VERSION>
-#          <FN>Gonzalo Arreche</FN>
-#          <PHOTO>
-#              <TYPE>JPG</TYPE>
-#              <BINVAL></BINVAL>
-#          </PHOTO>
-#      </vCard>
-#    </User>
-#  </Openfire>
-#
   test 'should create valid users.xml' do
     test_users = [
       Attendee.new({ :name => 'Winston Wolff', :email => 'winston@carbonfive.com' }),

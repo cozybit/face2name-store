@@ -4,22 +4,21 @@ class Ability
   REGISTRATION_ACTIONS = [ :show, :new_photo, :upload_photo, :userservice ]
 
   def initialize(user)
+
+    if !user.nil?
+      if user.admin?
+        can :manage, :all
+        return
+      elsif user.respond_to? :registrant? # i.e. temporary registrant
+        set_tmp_registrant_abilities(user)
+        return
+      else
+        set_event_manager_abilities(user)
+      end
+    end
+
     can :register, Attendee
     can :confirm_passcode, Event
-
-    return if user.nil?
-
-    if user.admin?
-      can :manage, :all
-      return
-    end
-
-    if user.respond_to? :registrant? # i.e. temporary registrant
-      set_tmp_registrant_abilities(user)
-      return
-    end
-
-    set_event_manager_abilities(user)
   end
 
   def set_tmp_registrant_abilities(user)

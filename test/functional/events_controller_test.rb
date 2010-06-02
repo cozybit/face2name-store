@@ -244,6 +244,5 @@ class EventsControllerTest < ActionController::TestCase
     get :confirm_passcode, :email => loretta.email, :passcode => loretta.passcode
 
     assert_response :success
-    puts response.body
   end
 end
