@@ -26,8 +26,6 @@ F2nstore::Application.configure do
 
 end
 
-Paperclip.options[:command_path] = "/opt/local/bin"
-
 F2N.deep_merge!({
   :cleanup_configs => true
 })
