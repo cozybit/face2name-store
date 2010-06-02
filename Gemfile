@@ -18,7 +18,6 @@ gem 'aws-s3', :require => 'aws/s3'
 gem 'cancan'
 
 group :test do
-  gem "rspec-rails", ">= 2.0.0.beta.1"
   gem 'mechanize'
   gem 'imagesize'
 end
