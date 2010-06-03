@@ -101,20 +101,6 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     assert decrypted == plaintext
   end
 
-  test "PK encryption is reversible" do
-    plaintext = 'This is the plaintext'
-
-    public_key = File.read(F2N[:test_public_key])
-    encrypted = pk_encrypt(plaintext, public_key)
-
-    private_key = File.read(F2N[:test_private_key])
-
-    private = OpenSSL::PKey::RSA.new(private_key)
-    unencrypted = private.private_decrypt(encrypted)
-
-    assert plaintext == unencrypted
-  end
-
   test 'should create valid users.xml' do
     test_users = [
       Attendee.new({ :name => 'Winston Wolff', :email => 'winston@carbonfive.com' }),

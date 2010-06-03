@@ -18,7 +18,7 @@ class Attendee < ActiveRecord::Base
 
   def set_passcode
     begin
-      self.passcode = make_passcode
+      self.passcode = Passcode.make_passcode
     end until Attendee.find_by_email_and_passcode(self.email, self.passcode).nil?
   end
 

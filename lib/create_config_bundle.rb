@@ -9,30 +9,7 @@ require 'openssl'
 require 'builder'
 require 'base64'
 
-def rails_root_fldr
-  if defined? "Rails.root"
-    Rails.root
-  else
-    File.dirname(File.dirname(File.expand_path(__FILE__)))
-  end
-end
 
-# Generate a random activation code, appended with a checksum.
-# See (subversion)/face2name/tests/activation/gen_activation_code.py
-def make_passcode()
-  act_code = ''
-  valid_set_ascii = ("A".."Z").to_a
-
-  5.times do
-    act_code << valid_set_ascii[ rand(valid_set_ascii.size-1) ]
-  end  
-  
-  check_code = act_code.sum % valid_set_ascii.size + 65
-  act_code += check_code.chr
-  raise 'Assert: code should be 6 chars' unless act_code.length == 6
-  
-  return act_code
-end
 #  Input:
 #    users = a two dimensional array, e.g.:
 #     [
@@ -81,7 +58,7 @@ end
 
 def make_temp_dir()
 #  shared_temp_fldr = Dir.tmpdir
-  shared_temp_fldr = File.join(rails_root_fldr, 'tmp' )
+  shared_temp_fldr = File.join(Rails.root, 'tmp' )
   valid_chars = ("A".."Z").to_a + ("a".."z").to_a + ("1".."9").to_a
 
   is_unique = false
@@ -245,39 +222,23 @@ def aes(plaintext, key)
   aes.update(plaintext) << aes.final
 end
 
-def pk_encrypt(plaintext, public_k)
-  public = OpenSSL::PKey::RSA.new(public_k)
-  public.public_encrypt(plaintext)
-end
-
-def pk_decrypt(encrypted, private_k)
-  private = OpenSSL::PKey::RSA.new(private_k)
-  private.private_decrypt(encrypted)
-end
-
 def crypt(plaintext)
   aes(plaintext, File.read(F2N[:encryption_key]))
-
-  #encrypted_key = pk_encrypt(aes_key, File.read(File.join(rails_root_fldr, 'lib', 'keys', 'public.pem')))
-
-  #encrypted_key << encrypted
 end
 
 #
-# Run the f2n-cipher Java program to encrypt our tarball.
+# encrypt file to be decrypted by f2n server
 #
-def f2n_cipher(tgz_filename)
-
-
+def f2n_cipher(filename)
   # replace .tar.gz with .f2nconfig
-  output_filename = tgz_filename
+  output_filename = filename
   tar_gz = '.tar.gz'
   if output_filename.end_with? tar_gz
     output_filename = output_filename.slice(0,output_filename.length-tar_gz.length)
   end
   output_filename += '.f2nconfig'
 
-  tgz = File.open(tgz_filename, 'r')
+  tgz = File.open(filename, 'r')
   out = File.open(output_filename, 'w')
   out.write(crypt(tgz.read()))
   tgz.close()
@@ -306,17 +267,6 @@ def make_configuration_bundle( event )
   f = File.new( File.join( tarball_source, 'admin_password.txt' ), 'wb' )
   f.write( event.admin_password )
   f.close()
-
-#  #???? TESTING
-#  File.open( File.join(tarball_source, 'users.xml'), 'w') do |f|
-#    test_users = [
-#      Attendee.new({ :name => 'Winston Wolff', :email => 'winston@carbonfive.com' }),
-#      Attendee.new({ :name => 'Gonzalo Arreche', :email => 'garreche@gmail.com' })
-#    ]
-#    test_users.each { |a| a.set_passcode }
-#
-#    f.write(make_users_xml(test_users ))
-#  end
 
   # tar/gzip it.
   tgz_filename = tar_gz( event.name, tempdir, tarball_source )
