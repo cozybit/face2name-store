@@ -82,7 +82,12 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     assert_equal( expect_end_time.month, c.not_after.month )
     assert_equal( expect_end_time.day, c.not_after.day )
     assert_equal( expect_serial_num, c.serial )
+
+
+    # check subject
     assert_match( /\/CN=#{event_name}\/.+/, c.subject.to_s )
+    assert_match( /emailAddress=ca@cozynets.com/, c.subject.to_s )
+
   end
 
   test "encrypt file with AES" do
