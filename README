@@ -35,16 +35,26 @@ Install Ruby
     rvm use ruby-1.8.7-p249@f2n
     - Check that "rvm list" shows an arrow at: => ruby-1.8.7-p249
     - Check that "rvm info" shows gemset: "f2n"
+
+On Linux, you need to install a few more things
+    aptitude update libxslt-dev libxml20dev
+    aptitude install libsqlite3-dev
+    
+Install ImageMagick
+    You'll need the "inspect" binary
+    Change face2name-store/config/environments/test.rb and indicate where your ImageMagick binary is.
     
 Install Rails 3 and all dependencies.
     cd face2name-store
     gem install bundler
-    bundle install  (note the missing R) (This downloads and installs everything.
+    bundle install  (note the missing R) (This downloads and installs everything.)
+
     
 Run Tests
     cd face2name-store
     rake db:migrate
     rake db:test:prepare
+    rake db:seed   (installs the admin user)
     rake test
     - This runs three sets of tests. So check that all three report something like:
         ## tests, ## assertions, 0 failures, 0 errors
@@ -73,12 +83,15 @@ Install Heroku tool
 Add Heroku as a remote GIT repository
     heroku keys:add ~/.ssh/id_rsa.pub (you should already have an id_rsa.pub)
     git remote add staging git@heroku.com:f2n-store-staging.git
-    - or - 
+    - and/or - 
     git remote add production git@heroku.com:f2n-store-production.git
 
 Push the source on your machine to Heroku
     git push staging (takes nickname from the "gem remote add" command above.)
     heroku rake db:migrate  (Depending on your changes, various DB tasks may need to be done.)
 
-
-    
+Test the store
+    Go to staging: http://f2n-store-staging.heroku.com
+    or production: http://face2name.store.cozynets.com
+    Confirm-Passcode XML api can be tested like so:
+       http://f2n-store-staging.heroku.com/events/confirm_passcode?email=test2@test.com&passcode=JORMUH
