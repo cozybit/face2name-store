@@ -78,7 +78,7 @@ class EventsController < ApplicationController
     @event = Event.find( params[:id] )
 
     filename = @event.name.gsub(/[\W]/, '_').slice(0,40) + '-' + Date.today.strftime("%Y-%m-%d")+'-users.xml'
-    send_data(ConfigBundle.make_users_xml(@event.attendees), :filename => filename,
+    send_data(@event.make_users_xml, :filename => filename,
               :type => "application/octet-stream")
   end
 

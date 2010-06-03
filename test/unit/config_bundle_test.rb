@@ -101,32 +101,6 @@ class ConfigBundleTest < ActiveSupport::TestCase
     assert decrypted == plaintext
   end
 
-  test 'should create valid users.xml' do
-    test_users = [
-      Attendee.new({ :name => 'Winston Wolff', :email => 'winston@carbonfive.com' }),
-      Attendee.new({ :name => 'Gonzalo Arreche', :email => 'garreche@gmail.com' })
-    ]
-
-    test_users.each do |a|
-      a.set_passcode
-      a.photo = File.open(Rails.root.join('test', 'fixtures', 'files', 'paperclips.jpg'), 'r')
-      a.save
-    end
-
-    xml = ConfigBundle.make_users_xml(test_users)
-    xml = Nokogiri::Slop(xml)
-
-    users = xml.Openfire.User
-    assert_equal 2, users.length
-
-    winston = users[0]
-    assert_equal 'Winston Wolff', winston.Name.text
-    assert_equal 'winston@carbonfive.com', winston.Email.text
-
-    assert winston.xpath('vcard:vCard', { 'vcard' => 'vcard-temp' }).length == 1
-    assert winston.xpath('vcard:vCard/vcard:PHOTO/vcard:BINVAL', { 'vcard' => 'vcard-temp' }).to_s.length > 50
-  end
-
   test 'f2n_server.cert should be in tarball once' do
     event = Event.create(:name => 'tarball file list test',
                          :not_before => Time.now + 1.days,
@@ -137,6 +111,16 @@ class ConfigBundleTest < ActiveSupport::TestCase
 
     files_in_tar = %x[tar -tf #{tarball_fname}]
     assert_equal 1, files_in_tar.scan('keys/f2n_server.cert').length
+  end
+
+  test 'ConfigBundle cleanup removes temporary directory' do
+    bundle = ConfigBundle.new(events(:one))
+
+    assert File.exist?(bundle.temp_dir)
+
+    bundle.cleanup
+
+    assert !File.exist?(bundle.temp_dir)
   end
 
 #  test 'crypt file AES key and decrypt with f2n_cipher' do

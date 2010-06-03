@@ -13,42 +13,27 @@ class ConfigBundle
   attr_accessor :config_filename, :temp_dir
 
   def initialize(event)
-    @config_filename, @temp_dir = self.make_configuration_bundle(event)
-  end
+    # build directory structure on disk
+    @temp_dir = Utils.make_temp_dir()
 
-  def self.make_users_xml( attendees )
-    result_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-  <Openfire>
-  "
-    now = Time.now().to_i * 1000
+    tarball_source = File.join( @temp_dir, 'to_tar_gz' )
+    FileUtils.mkdir_p( tarball_source )
+    raise "Assert: Unable to make temporary folder at '"+tarball_source+"'" unless File.directory? tarball_source
 
-    for attendee in attendees do
-      username = Digest::SHA1.hexdigest( attendee.email )
+    # Add a 5 day buffer on either side of the certificate's window
+    ConfigBundle.openssl_certificates( @temp_dir, File.join( tarball_source, 'keys' ),
+      event.id, event.name, event.not_before - 5.days, event.not_after + 5.days)
 
-      photo_u64_data = attendee.photo_data64
+    # Make admin password File
+    f = File.new( File.join( tarball_source, 'admin_password.txt' ), 'wb' )
+    f.write( event.admin_password )
+    f.close()
 
-      result_xml += "  <User>
-      <Username>#{username}</Username>
-      <Password>#{attendee.passcode}</Password>
-      <Email>#{attendee.email}</Email>
-      <Name>#{attendee.name}</Name>
-      <CreationDate>#{now}</CreationDate>
-      <ModifiedDate>#{now}</ModifiedDate>
-      <Roster/>
-      <vCard xmlns=\"vcard-temp\">
-          <VERSION>2.0</VERSION>
-          <FN>#{attendee.name}</FN>
-          <PHOTO>
-              <TYPE>JPG</TYPE>
-              <BINVAL>#{photo_u64_data}</BINVAL>
-          </PHOTO>
-      </vCard>
-    </User>
-  "
-    end
-    result_xml += "</Openfire>\n"
+    # tar/gzip it.
+    tgz_filename = tar_gz( event.name, @temp_dir, tarball_source )
 
-    result_xml
+    # encrypt it
+    @config_filename = f2n_cipher(tgz_filename )
   end
 
   def tar_gz( event_name, output_dir, tarball_source )
@@ -156,8 +141,8 @@ class ConfigBundle
     aes.update(plaintext) << aes.final
   end
 
-  def self.crypt(plaintext)
-    aes(plaintext, File.read(F2N[:encryption_key]))
+  def encrypt(plaintext)
+    ConfigBundle.aes(plaintext, File.read(F2N[:encryption_key]))
   end
 
   #
@@ -174,7 +159,7 @@ class ConfigBundle
 
     tgz = File.open(filename, 'r')
     out = File.open(output_filename, 'w')
-    out.write(ConfigBundle.crypt(tgz.read()))
+    out.write(encrypt(tgz.read()))
     tgz.close()
     out.close()
 
@@ -183,32 +168,6 @@ class ConfigBundle
     end
 
     return output_filename
-  end
-
-
-  def make_configuration_bundle( event )
-    # build directory structure on disk
-    tempdir = Utils.make_temp_dir()
-    tarball_source = File.join( tempdir, 'to_tar_gz' )
-    FileUtils.mkdir_p( tarball_source )
-    raise "Assert: Unable to make temporary folder at '"+tarball_source+"'" unless File.directory? tarball_source
-
-    # Add a 5 day buffer on either side of the certificate's window
-    ConfigBundle.openssl_certificates( tempdir, File.join( tarball_source, 'keys' ),
-      event.id, event.name, event.not_before - 5.days, event.not_after + 5.days)
-
-    # Make admin password File
-    f = File.new( File.join( tarball_source, 'admin_password.txt' ), 'wb' )
-    f.write( event.admin_password )
-    f.close()
-
-    # tar/gzip it.
-    tgz_filename = tar_gz( event.name, tempdir, tarball_source )
-
-    # encrypt it
-    cipher_filename = f2n_cipher(tgz_filename )
-
-    return [cipher_filename, tempdir]
   end
 
   def cleanup
