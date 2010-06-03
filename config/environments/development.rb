@@ -27,9 +27,9 @@ F2nstore::Application.configure do
 
 end
 
-# The line below did not work on Ubuntu
-#Paperclip.options[:command_path] = "/opt/local/bin:/usr/local/bin"
-Paperclip.options[:command_path] = "/usr/bin"
+%w"/usr/bin /opt/local/bin /usr/local/bin".each do |dir|
+  Paperclip.options[:command_path] = dir if File.exist?(File.join(dir, 'identify'))
+end
 
 F2N.deep_merge!({
   :cleanup_configs => false
