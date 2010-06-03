@@ -27,7 +27,9 @@ F2nstore::Application.configure do
 
 end
 
-Paperclip.options[:command_path] = "/opt/local/bin"
+# The line below did not work on Ubuntu
+#Paperclip.options[:command_path] = "/opt/local/bin:/usr/local/bin"
+Paperclip.options[:command_path] = "/usr/bin"
 
 F2N.deep_merge!({
   :cleanup_configs => false

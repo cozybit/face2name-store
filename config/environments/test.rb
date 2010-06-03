@@ -33,7 +33,10 @@ F2nstore::Application.configure do
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
 end
 
-Paperclip.options[:command_path] = "/opt/local/bin"
+# The solution below did not work
+#Paperclip.options[:command_path] = "/opt/local/bin:/usr/bin"
+# This did work on Ubuntu:
+Paperclip.options[:command_path] = "/usr/bin"
 
 F2N.deep_merge!({
   # Configure CA Certs used for signing Event Certs
