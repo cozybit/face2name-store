@@ -241,7 +241,7 @@ def openssl_certificates( temp_dir, keys_dir, cert_serial_num, event_name, not_b
 end
 
 def aes(plaintext, key)
-  (aes = OpenSSL::Cipher::Cipher.new('aes-256-ecb').encrypt()).key = key # Should Digest::SHA256.digest(key)) this key instead
+  (aes = OpenSSL::Cipher::Cipher.new('aes-128-ecb').encrypt()).key = key # Should Digest::SHA256.digest(key)) this key instead
   aes.update(plaintext) << aes.final
 end
 
@@ -268,8 +268,7 @@ end
 #
 def f2n_cipher(tgz_filename)
 
-
-  # replace .tar.gz with .f2nconfig
+  # append or replace .tar.gz with .f2nconfig
   output_filename = tgz_filename
   tar_gz = '.tar.gz'
   if output_filename.end_with? tar_gz
