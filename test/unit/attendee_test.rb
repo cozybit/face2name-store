@@ -1,6 +1,6 @@
 require 'test_helper'
 require 'base64'
-require "image_size"
+require 'image_size'
 
 class AttendeeTest < ActiveSupport::TestCase
   test 'email validation is reasonable' do
@@ -18,6 +18,24 @@ class AttendeeTest < ActiveSupport::TestCase
     attendee.save
 
     assert_equal 6, attendee.passcode.length
+  end
+
+  test 'cannot have two attendees with same email for same event' do
+    attendee = Attendee.new({:name => 'Loretta Two', :email => 'loretta@attendee.com', :event_id => events(:attended).to_param})
+
+    assert !attendee.valid?
+  end
+
+  test 'can have two attendees with same email register for different events' do
+    attendee = Attendee.new({:name => 'Loretta Two', :email => 'loretta@attendee.com', :event_id => events(:one).to_param})
+
+    assert attendee.valid?
+  end
+
+  test 'cannot have two attendee records with same email and passcode' do
+    attendee = Attendee.new({:name => 'Loretta Two', :email => 'loretta@attendee.com', :event_id => events(:one).to_param, :passcode => 'ABCDEF'})
+
+    assert !attendee.valid?
   end
 
   test 'should thumnail photo and upload to s3' do
