@@ -1,4 +1,4 @@
-require 'create_config_bundle'
+require 'config_bundle'
 require 'google_checkout'
 require 'date'
 require 'nokogiri'
@@ -61,15 +61,16 @@ class EventsController < ApplicationController
 
     return redirect_to event_url(@event) if !@event.downloadable?
     
-    config_bundle_fname, temp_dir = make_configuration_bundle( @event )
+    bundle = ConfigBundle.new( @event )
 
-    short_fname = File.basename( config_bundle_fname )
-    send_data(File.open(config_bundle_fname, 'r').read(), :filename => short_fname,
+    short_fname = File.basename( bundle.config_filename )
+    send_data(File.open(bundle.config_filename, 'r').read(), :filename => short_fname,
               :type => "application/octet-stream")
 
     @event.update_attribute(:status, :downloaded)
+
     if F2N[:cleanup_configs]
-      cleanup( temp_dir )
+      bundle.cleanup
     end
   end
 
@@ -77,7 +78,7 @@ class EventsController < ApplicationController
     @event = Event.find( params[:id] )
 
     filename = @event.name.gsub(/[\W]/, '_').slice(0,40) + '-' + Date.today.strftime("%Y-%m-%d")+'-users.xml'
-    send_data(make_users_xml(@event.attendees), :filename => filename,
+    send_data(ConfigBundle.make_users_xml(@event.attendees), :filename => filename,
               :type => "application/octet-stream")
   end
 

@@ -38,6 +38,14 @@ class AttendeeTest < ActiveSupport::TestCase
     assert !attendee.valid?
   end
 
+  test 'attendee generates passcodes until email:passcode combination is unique' do
+    values = 'ABCDEF', 'ABCDEF', 'ABCDEF', 'UNIQUE'
+    Passcode.stubs(:make_passcode).returns(*values)
+    attendee = Attendee.create({:name => 'Loretta Two', :email => 'loretta@attendee.com', :event_id => events(:one).to_param})
+
+    assert_equal values.last, attendee.passcode
+  end
+
   test 'should thumnail photo and upload to s3' do
     attendee = Attendee.create({:name => 'valid name', :email => 'foo@foo.com'})
     attendee.photo = File.open(Rails.root.join('test', 'fixtures', 'files', 'paperclips.jpg'), 'r')

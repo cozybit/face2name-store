@@ -1,5 +1,5 @@
 require 'base64'
-require 'create_config_bundle'
+require 'config_bundle'
 
 class Attendee < ActiveRecord::Base
   belongs_to :event
