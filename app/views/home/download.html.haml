@@ -2,7 +2,7 @@
   %h1.title.tk-bree Download face2name Server
 
   %p
-    %a{:href => 'http://f2n-store-prod.s3.amazonaws.com/face2name_server.tar.gz'} face2name_server.tar.gz
+    %a{:href => "http://#{F2N[:paperclip_info][:bucket]}.s3.amazonaws.com/face2name_server.tar.gz"} face2name_server.tar.gz
 
   %p
     Untar the tarball on your computer. It will extract into a folder with the same name.

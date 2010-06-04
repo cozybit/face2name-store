@@ -46,5 +46,9 @@ F2nstore::Application.configure do
 end
 
 F2N.deep_merge!({
-  :cleanup_configs => true
+  :cleanup_configs => true,
+
+  :paperclip_info => {
+    :bucket => "f2n-store-staging",
+  }
 })

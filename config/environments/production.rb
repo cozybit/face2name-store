@@ -46,6 +46,8 @@ F2nstore::Application.configure do
 end
 
 F2N.deep_merge!({
+  :cleanup_configs => true,
+
   :google_merchant_info => {
     :merchant_id => '629004277395740',
     :merchant_key => 'Wge2vsXyG8FnNJbHR-JYQg',
