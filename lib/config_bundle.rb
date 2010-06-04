@@ -137,7 +137,7 @@ class ConfigBundle
   end
 
   def self.aes(plaintext, key)
-    (aes = OpenSSL::Cipher::Cipher.new('aes-256-ecb').encrypt()).key = key # Should Digest::SHA256.digest(key)) this key instead
+    (aes = OpenSSL::Cipher::Cipher.new('aes-128-ecb').encrypt()).key = key # Should Digest::SHA256.digest(key)) this key instead
     aes.update(plaintext) << aes.final
   end
 

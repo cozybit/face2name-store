@@ -94,7 +94,7 @@ class ConfigBundleTest < ActiveSupport::TestCase
     plaintext = 'This is the plaintext'
     encrypted = ConfigBundle.aes(plaintext, Digest::SHA256.digest('foo'))
 
-    d = OpenSSL::Cipher::Cipher.new('aes-256-ecb').decrypt
+    d = OpenSSL::Cipher::Cipher.new('aes-128-ecb').decrypt
     d.key = Digest::SHA256.digest('foo')
     decrypted = d.update(encrypted) << d.final
     
