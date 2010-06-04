@@ -1,13 +1,13 @@
 # test stuff in lib folder
 
 require 'test_helper'
-require 'create_config_bundle'
+require 'config_bundle'
 require 'openssl'
 require 'base64'
 require 'digest/sha2'
 require 'nokogiri'
 
-class CreateConfigBundleTest < ActiveSupport::TestCase
+class ConfigBundleTest < ActiveSupport::TestCase
 
   # Can we extract data from the certificate? E.g.
   # openssl x509 -noout -text -in f2n_server.cert
@@ -18,7 +18,7 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
                          :admin_password => 'simple')
     event.id = rand(100)+1
 
-    make_configuration_bundle( event )
+    ConfigBundle.new( event )
   end
 
   test 'config bundle should be named properly' do
@@ -28,10 +28,10 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
                          :not_after => Time.now + 3.days,
                          :admin_password => 'simple')
 
-    fname, tempfile = make_configuration_bundle( event )
-    assert File.basename(fname).start_with? 'A_Long_Con', "should begin with event name"
+    bundle = ConfigBundle.new( event )
+    assert File.basename(bundle.config_filename).start_with? 'A_Long_Con', "should begin with event name"
     timestamp = Time.now.strftime('%Y-%m-%d')
-    assert fname.end_with? "#{timestamp}.f2nconfig"
+    assert bundle.config_filename.end_with? "#{timestamp}.f2nconfig"
 
   end
 
@@ -46,8 +46,8 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
                          :admin_password => 'simple')
     event.id = rand(100)+1
 
-    ignored, temp_dir = make_configuration_bundle( event )
-    cert_name = Dir.glob(File.join(temp_dir, '**', 'f2n_server.cert')).first
+    bundle = ConfigBundle.new( event )
+    cert_name = Dir.glob(File.join(bundle.temp_dir, '**', 'f2n_server.cert')).first
 
     c = OpenSSL::X509::Certificate.new(File.read(cert_name))
     assert_equal( not_after + 5.days, c.not_after )
@@ -56,19 +56,19 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
 
   test "certificate data" do
     # create certificate
-    temp_dir = make_temp_dir()
+    temp_dir = Utils.make_temp_dir()
     expect_start_time = Time.utc(2010, rand(12)+1, rand(28)+1 )
     event_name = 'Test Certificate Data'
     expect_end_time = expect_start_time + (rand(21)+1) * 60*60*24
     expect_serial_num = rand(100)+1
-    cert_name = openssl_certificates( temp_dir, temp_dir, expect_serial_num, event_name,
+    cert_name = ConfigBundle.openssl_certificates( temp_dir, temp_dir, expect_serial_num, event_name,
        expect_start_time, expect_end_time )
 
     # Check end-date
     #    e.g.: "notBefore=May 11 21:24:46 2010 GMT"
     expect_output_regex = /notAfter=#{expect_end_time.strftime('%b %e')} \d+\:\d+\:\d+ #{expect_end_time.strftime('%Y')} GMT/
     cmd = "openssl x509 -noout -enddate -in #{cert_name} 2>&1"
-    output = run_cmd( cmd )
+    output = Utils.run_cmd( cmd )
     assert_match(expect_output_regex, output )
 
     # Check again with Ruby lib
@@ -92,7 +92,7 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
 
   test "encrypt file with AES" do
     plaintext = 'This is the plaintext'
-    encrypted = aes(plaintext, Digest::SHA256.digest('foo'))
+    encrypted = ConfigBundle.aes(plaintext, Digest::SHA256.digest('foo'))
 
     d = OpenSSL::Cipher::Cipher.new('aes-128-ecb').decrypt
     d.key = Digest::SHA256.digest('foo')
@@ -101,56 +101,26 @@ class CreateConfigBundleTest < ActiveSupport::TestCase
     assert decrypted == plaintext
   end
 
-  test "PK encryption is reversible" do
-    plaintext = 'This is the plaintext'
-
-    public_key = File.read(F2N[:test_public_key])
-    encrypted = pk_encrypt(plaintext, public_key)
-
-    private_key = File.read(F2N[:test_private_key])
-
-    private = OpenSSL::PKey::RSA.new(private_key)
-    unencrypted = private.private_decrypt(encrypted)
-
-    assert plaintext == unencrypted
-  end
-
-  test 'should create valid users.xml' do
-    test_users = [
-      Attendee.new({ :name => 'Winston Wolff', :email => 'winston@carbonfive.com' }),
-      Attendee.new({ :name => 'Gonzalo Arreche', :email => 'garreche@gmail.com' })
-    ]
-
-    test_users.each do |a|
-      a.set_passcode
-      a.photo = File.open(Rails.root.join('test', 'fixtures', 'files', 'paperclips.jpg'), 'r')
-      a.save
-    end
-
-    xml = make_users_xml(test_users)
-    xml = Nokogiri::Slop(xml)
-
-    users = xml.Openfire.User
-    assert_equal 2, users.length
-
-    winston = users[0]
-    assert_equal 'Winston Wolff', winston.Name.text
-    assert_equal 'winston@carbonfive.com', winston.Email.text
-
-    assert winston.xpath('vcard:vCard', { 'vcard' => 'vcard-temp' }).length == 1
-    assert winston.xpath('vcard:vCard/vcard:PHOTO/vcard:BINVAL', { 'vcard' => 'vcard-temp' }).to_s.length > 50
-  end
-
   test 'f2n_server.cert should be in tarball once' do
     event = Event.create(:name => 'tarball file list test',
                          :not_before => Time.now + 1.days,
                          :not_after => Time.now + 3.days,
                          :admin_password => 'simple')
-    fname, tempfolder = make_configuration_bundle( event )
-    tarball_fname = fname.gsub('f2nconfig', 'tar.gz')
+    bundle = ConfigBundle.new( event )
+    tarball_fname = bundle.config_filename.gsub('f2nconfig', 'tar.gz')
 
     files_in_tar = %x[tar -tf #{tarball_fname}]
     assert_equal 1, files_in_tar.scan('keys/f2n_server.cert').length
+  end
+
+  test 'ConfigBundle cleanup removes temporary directory' do
+    bundle = ConfigBundle.new(events(:one))
+
+    assert File.exist?(bundle.temp_dir)
+
+    bundle.cleanup
+
+    assert !File.exist?(bundle.temp_dir)
   end
 
 #  test 'crypt file AES key and decrypt with f2n_cipher' do

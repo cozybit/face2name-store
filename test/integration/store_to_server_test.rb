@@ -12,8 +12,17 @@ STORE_URL = "http://localhost:3000"
 SERVER_THINCLIENT_URL = "http://localhost:8080"
 SERVER_IMPORT_URL = "http://localhost:9080"
 
-class StoreToServerTest < Test::Unit::TestCase
 
+def openStringInBrowser( htmlStr )
+  tmp_filename = File.join( Dir.tmpdir, 'temp.html')
+  tmp = File.open( tmp_filename, 'w')
+  tmp.write( htmlStr )
+  tmp.close()
+  puts "!!! Error body stored here: #{tmp_filename}"
+  system( "open file://#{tmp.path}" )
+end
+
+class StoreToServerTest < Test::Unit::TestCase
 
   def f2n_server_is_running()
     browser = Mechanize.new
@@ -36,18 +45,15 @@ class StoreToServerTest < Test::Unit::TestCase
       return false
     end
   end
-#
-#  def test_f2n_server_is_running()
-#    assert f2n_server_is_running(), "The face2name SERVER is not running. Related tests will be disabled."
-#  end
-#
-#  def test_f2n_server_is_running()
-#    assert f2n_store_is_running(), "The face2name STORE is not running. Related tests will be disabled."
-#  end
 
   def test_buy_and_import_configuration()
-    if ! f2n_server_is_running() || ! f2n_store_is_running()
-      puts "test_buy_and_import_configuration: No f2n server found. Skipping test."
+    if ! f2n_server_is_running()
+      puts "test_buy_and_import_configuration: No f2n server found at #{SERVER_THINCLIENT_URL}. Skipping test."
+      return
+    end
+
+    if ! f2n_store_is_running()
+      puts "test_buy_and_import_configuration: No f2n store found at #{STORE_URL}. Skipping test."
       return
     end
 
@@ -88,8 +94,6 @@ class StoreToServerTest < Test::Unit::TestCase
       download_configuration_btn = the_event_page.link_with(:text=>"Download Configuration")
       assert download_configuration_btn != nil, 'Could not find Download Configuration button. Is the user an unlimited user? Remember not the test db but the currently running store.'
       config_file = download_configuration_btn.click
-  #    yes_download_btn = confirmation_dialog.button_with(:text=>"Yes - Download")
-  #    config_file = yes_download_btn.click
       assert config_file.body.length > 0
       assert config_file.response['content-type'] == 'application/octet-stream'
       config_tmp_filename = File.join( Dir.tmpdir, config_file.filename )
@@ -112,16 +116,12 @@ class StoreToServerTest < Test::Unit::TestCase
       throw exc
     end
   end
+
+  def test_true()
+    assert 1==1
+  end
 end
 
-def openStringInBrowser( htmlStr )
-  tmp_filename = File.join( Dir.tmpdir, 'temp.html')
-  tmp = File.open( tmp_filename, 'w')
-  tmp.write( htmlStr )
-  tmp.close()
-  puts "!!! Error body stored here: #{tmp_filename}"
-  system( "open file://#{tmp.path}" )
-end
 
 if __FILE__ == $0
   require 'test/unit/ui/console/testrunner'

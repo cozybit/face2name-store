@@ -59,4 +59,27 @@ class EventTest < ActiveSupport::TestCase
     event = Event.new( :name => event_name, :not_before => Date.today(), :not_after => Date.today() + 3, :admin_password => 'simple')
     assert ! event.valid?, '64 chars should be invalid'
   end
+
+  test 'should create valid users.xml' do
+    event = events(:attended)
+
+    event.attendees.each do |a|
+      a.set_passcode
+      a.photo = File.open(Rails.root.join('test', 'fixtures', 'files', 'paperclips.jpg'), 'r')
+      a.save
+    end
+
+    xml = event.make_users_xml
+    xml = Nokogiri::Slop(xml)
+
+    users_from_xml = xml.Openfire.User
+    assert_equal event.attendees.length, users_from_xml.length
+
+    first_user = users_from_xml[0]
+    assert_equal event.attendees[0].name, first_user.Name.text
+    assert_equal event.attendees[0].email, first_user.Email.text
+
+    assert first_user.xpath('vcard:vCard', { 'vcard' => 'vcard-temp' }).length == 1
+    assert first_user.xpath('vcard:vCard/vcard:PHOTO/vcard:BINVAL', { 'vcard' => 'vcard-temp' }).to_s.length > 50
+  end
 end

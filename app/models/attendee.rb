@@ -1,5 +1,5 @@
-require 'create_config_bundle'
 require 'base64'
+require 'config_bundle'
 
 class Attendee < ActiveRecord::Base
   belongs_to :event
@@ -12,11 +12,14 @@ class Attendee < ActiveRecord::Base
                       :message => 'doesn\'t appear to be a valid email address'
 
   validates_uniqueness_of :email, :scope => :event_id
+  validates_uniqueness_of :email, :scope => :passcode
 
   before_create :set_passcode
 
   def set_passcode
-    self.passcode = make_passcode
+    begin
+      self.passcode = Passcode.make_passcode
+    end until Attendee.find_by_email_and_passcode(self.email, self.passcode).nil?
   end
 
   def photo_data64

@@ -60,4 +60,39 @@ class Event < ActiveRecord::Base
   def downloaded?
     self.status == :downloaded
   end
+
+  def make_users_xml
+    result_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<Openfire>
+"
+    now = Time.now().to_i * 1000
+
+    for attendee in self.attendees do
+      username = Digest::SHA1.hexdigest( attendee.email )
+
+      photo_u64_data = attendee.photo_data64
+
+      result_xml += "  <User>
+      <Username>#{username}</Username>
+      <Password>#{attendee.passcode}</Password>
+      <Email>#{attendee.email}</Email>
+      <Name>#{attendee.name}</Name>
+      <CreationDate>#{now}</CreationDate>
+      <ModifiedDate>#{now}</ModifiedDate>
+      <Roster/>
+      <vCard xmlns=\"vcard-temp\">
+          <VERSION>2.0</VERSION>
+          <FN>#{attendee.name}</FN>
+          <PHOTO>
+              <TYPE>JPG</TYPE>
+              <BINVAL>#{photo_u64_data}</BINVAL>
+          </PHOTO>
+      </vCard>
+    </User>
+  "
+    end
+    result_xml += "</Openfire>\n"
+
+    result_xml
+  end
 end
