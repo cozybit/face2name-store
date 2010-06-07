@@ -12,7 +12,7 @@ def initiate_event_purchase(event, confirmation_url)
   checkout_command.shopping_cart.create_item do |item|
     item.name = "Face2Name Event: #{event.name}"
     item.description = "From #{event.not_before.strftime('%b %d %Y')} to #{event.not_after.strftime('%b %d %Y')}"
-    item.unit_price = Money.us_dollar(100000)
+    item.unit_price = Money.us_dollar(1000000)
     item.quantity = 1
 
     item.create_digital_content do |digital_content|
