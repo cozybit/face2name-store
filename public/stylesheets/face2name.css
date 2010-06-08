@@ -18,6 +18,7 @@ body {
   margin: 30px 0px 0px 10px;
   font-size: 45px;
   color: #0079C1;
+  line-height: 1em; /* fix rendering bug on IE6 */
 }
 
 #reg-title {
