@@ -1,18 +1,17 @@
 div.timeframe_calendar {
-  display: inline-block;
   margin: 0;
   padding: 0;
-  text-align: center;
   text-shadow: none;
+  position: relative;
 }
 
 /* Menu */
 div.timeframe_calendar ul.timeframe_menu {
   list-style-type: none;
   font-weight: bold;
-  margin: auto;
   padding: 0 0 6px;
-  width: 60px;
+  text-align: center;
+  width: 322px;
 }
   div.timeframe_calendar ul.timeframe_menu li {
     display: inline;
@@ -66,15 +65,20 @@ div.timeframe_calendar ul.timeframe_menu {
 /* Calendar*/
 div.timeframe_calendar table {
   border-collapse: collapse;
-  display: inline;
-  display: inline-block;
+  /*display: inline;*/
+  /*display: inline-block;*/
+  float: left;
   font-size: 15px;
   margin: 0 0px 7px;
-  border-right: 1px solid #CCC;
+  margin-right: 10pt;
 }
 
 div.timeframe_calendar table:last-child {
   border: none;
+  margin-right: 0;
+}
+#calendar_dates {
+    clear: both;
 }
   /* Month names */
   div.timeframe_calendar table caption {
