@@ -65,8 +65,6 @@ div.timeframe_calendar ul.timeframe_menu {
 /* Calendar*/
 div.timeframe_calendar table {
   border-collapse: collapse;
-  /*display: inline;*/
-  /*display: inline-block;*/
   float: left;
   text-align: center;
   font-size: 15px;
