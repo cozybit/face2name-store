@@ -68,6 +68,7 @@ div.timeframe_calendar table {
   /*display: inline;*/
   /*display: inline-block;*/
   float: left;
+  text-align: center;
   font-size: 15px;
   margin: 0 0px 7px;
   margin-right: 10pt;
